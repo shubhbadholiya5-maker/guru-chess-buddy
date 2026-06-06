@@ -1,1 +1,0 @@
-Couldn't find the requested file /example/public/stockfish.js in nmrugg/stockfish.js.
