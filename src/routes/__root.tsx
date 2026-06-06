@@ -11,7 +11,6 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-import { Toaster } from "sonner";
 
 function NotFoundComponent() {
   return (
@@ -79,13 +78,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { name: "description", content: "Guru Chess Coach is an AI-powered web application that provides personalized chess training for players up to 2000 rating." },
       { name: "author", content: "Lovable" },
       { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:description", content: "Guru Chess Coach is an AI-powered web application that provides personalized chess training for players up to 2000 rating." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Lovable App" },
+      { name: "twitter:description", content: "Guru Chess Coach is an AI-powered web application that provides personalized chess training for players up to 2000 rating." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/5b9fcc7d-acfb-44d2-98cd-fba0793ea59e/id-preview-1aa2aa12--86f88170-73a6-45e7-ac60-8543e08774fa.lovable.app-1780758080292.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/5b9fcc7d-acfb-44d2-98cd-fba0793ea59e/id-preview-1aa2aa12--86f88170-73a6-45e7-ac60-8543e08774fa.lovable.app-1780758080292.png" },
     ],
     links: [
       {
@@ -119,8 +122,8 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
-      <Toaster theme="dark" position="top-center" richColors />
     </QueryClientProvider>
   );
 }
