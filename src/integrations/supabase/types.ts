@@ -14,7 +14,135 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      coach_messages: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          role: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      game_analyses: {
+        Row: {
+          accuracy: number | null
+          blunders: number | null
+          created_at: string
+          id: string
+          mistakes: number | null
+          pgn: string
+          summary: string | null
+          user_id: string
+        }
+        Insert: {
+          accuracy?: number | null
+          blunders?: number | null
+          created_at?: string
+          id?: string
+          mistakes?: number | null
+          pgn: string
+          summary?: string | null
+          user_id: string
+        }
+        Update: {
+          accuracy?: number | null
+          blunders?: number | null
+          created_at?: string
+          id?: string
+          mistakes?: number | null
+          pgn?: string
+          summary?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          daily_minutes: number
+          display_name: string | null
+          goal: string | null
+          id: string
+          language: string
+          last_active_date: string | null
+          onboarded: boolean
+          rating: number
+          streak_days: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          daily_minutes?: number
+          display_name?: string | null
+          goal?: string | null
+          id: string
+          language?: string
+          last_active_date?: string | null
+          onboarded?: boolean
+          rating?: number
+          streak_days?: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          daily_minutes?: number
+          display_name?: string | null
+          goal?: string | null
+          id?: string
+          language?: string
+          last_active_date?: string | null
+          onboarded?: boolean
+          rating?: number
+          streak_days?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      puzzle_attempts: {
+        Row: {
+          created_at: string
+          hints_used: number
+          id: string
+          puzzle_id: string
+          solved: boolean
+          time_seconds: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          hints_used?: number
+          id?: string
+          puzzle_id: string
+          solved: boolean
+          time_seconds?: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          hints_used?: number
+          id?: string
+          puzzle_id?: string
+          solved?: boolean
+          time_seconds?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
