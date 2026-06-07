@@ -73,7 +73,7 @@ function TrainerView({ opening, onExit }: { opening: Opening; onExit: () => void
   const [coachLoading, setCoachLoading] = useState(false);
   const [phase, setPhase] = useState<Phase>(opening.side === "white" ? "waiting-user" : "auto-opponent");
   const [lang, setLang] = useState<Lang>("hinglish");
-  const [voiceOut, setVoiceOut] = useState(false);
+  const [voiceOut, setVoiceOut] = useState(true);
   const [completed, setCompleted] = useState(false);
   const explain = useServerFn(explainOpeningMove);
   const boardOrientation = opening.side;
