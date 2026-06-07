@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
 import { useServerFn } from "@tanstack/react-start";
@@ -38,7 +38,7 @@ function PlayPage() {
   const chat = useServerFn(coachChat);
   const [training, setTraining] = useState(true);
   const [lang, setLang] = useState<Lang>("hinglish");
-  const [voiceOut, setVoiceOut] = useState(false);
+  const [voiceOut, setVoiceOut] = useState(true);
   const [phase, setPhase] = useState<Phase>("prompt");
   const [coachMsg, setCoachMsg] = useState<string>(
     "Training mode on hai! 🎓 Aap White ho. Pehle socho:\n\n- **Aap kya move soch rahe ho?**\n- **Opponent ki threat kya ho sakti hai** (abhi koi nahi, kyunki opening hai)?\n- **Pehle 3 moves ka plan** kya hai — center, development, king safety?\n\nApna pehla move chalo jab ready ho.",
@@ -104,7 +104,6 @@ function PlayPage() {
         },
       });
       setCoachMsg(res.reply);
-      if (voiceOut) speak(stripMd(res.reply), lang);
     } catch (e: any) {
       setCoachMsg("⚠️ " + (e?.message ?? "Coach unavailable. Continue playing."));
     } finally {
@@ -153,7 +152,26 @@ function PlayPage() {
     }
   };
 
-  const size = useMemo(() => Math.min(560, typeof window !== "undefined" ? window.innerWidth - 60 : 400), []);
+  const [size, setSize] = useState<number>(() => {
+    if (typeof window === "undefined") return 360;
+    return Math.min(560, window.innerWidth - 32);
+  });
+  useEffect(() => {
+    const onResize = () => {
+      const w = window.innerWidth;
+      const max = w >= 768 ? Math.min(560, w - 320 - 80) : w - 48;
+      setSize(Math.max(260, Math.min(560, max)));
+    };
+    onResize();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  useEffect(() => {
+    if (!voiceOut || coachLoading || !coachMsg) return;
+    speak(stripMd(coachMsg), lang);
+  }, [coachMsg, voiceOut, coachLoading, lang]);
+  useEffect(() => () => stopSpeaking(), []);
 
   return (
     <AppShell title="Play vs Stockfish">

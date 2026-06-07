@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
 import { useServerFn } from "@tanstack/react-start";
@@ -73,7 +73,7 @@ function TrainerView({ opening, onExit }: { opening: Opening; onExit: () => void
   const [coachLoading, setCoachLoading] = useState(false);
   const [phase, setPhase] = useState<Phase>(opening.side === "white" ? "waiting-user" : "auto-opponent");
   const [lang, setLang] = useState<Lang>("hinglish");
-  const [voiceOut, setVoiceOut] = useState(false);
+  const [voiceOut, setVoiceOut] = useState(true);
   const [completed, setCompleted] = useState(false);
   const explain = useServerFn(explainOpeningMove);
   const boardOrientation = opening.side;
@@ -133,7 +133,6 @@ function TrainerView({ opening, onExit }: { opening: Opening; onExit: () => void
         },
       });
       setCoachMsg(res.reply);
-      if (voiceOut) speak(stripMd(res.reply), lang);
     } catch (e: any) {
       const fallback = opening.moves[newIdx - 1]?.idea ?? "Move played.";
       setCoachMsg(`⚠️ ${e?.message ?? "Coach offline"}\n\n**Hint:** ${fallback}`);
@@ -207,7 +206,30 @@ function TrainerView({ opening, onExit }: { opening: Opening; onExit: () => void
     toast.info(`Hint: ${m.san} — ${m.idea}`);
   };
 
-  const size = useMemo(() => Math.min(560, typeof window !== "undefined" ? window.innerWidth - 60 : 400), []);
+  const [size, setSize] = useState<number>(() => {
+    if (typeof window === "undefined") return 360;
+    return Math.min(560, window.innerWidth - 32);
+  });
+  useEffect(() => {
+    const onResize = () => {
+      const w = window.innerWidth;
+      // on md+ (>=768) leave room for 340px sidebar + gap + padding
+      const max = w >= 768 ? Math.min(560, w - 340 - 80) : w - 48;
+      setSize(Math.max(260, Math.min(560, max)));
+    };
+    onResize();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  // Speak coach messages aloud when voice is on
+  useEffect(() => {
+    if (!voiceOut) return;
+    if (coachLoading) return;
+    if (!coachMsg) return;
+    speak(stripMd(coachMsg), lang);
+  }, [coachMsg, voiceOut, coachLoading, lang]);
+  useEffect(() => () => stopSpeaking(), []);
 
   const progress = Math.round((moveIdx / opening.moves.length) * 100);
   const showContinue = phase === "explaining" && !coachLoading && !completed && moveIdx < opening.moves.length;
