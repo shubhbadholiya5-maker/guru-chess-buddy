@@ -104,7 +104,6 @@ function PlayPage() {
         },
       });
       setCoachMsg(res.reply);
-      if (voiceOut) speak(stripMd(res.reply), lang);
     } catch (e: any) {
       setCoachMsg("⚠️ " + (e?.message ?? "Coach unavailable. Continue playing."));
     } finally {
