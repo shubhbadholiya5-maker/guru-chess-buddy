@@ -38,7 +38,7 @@ function PlayPage() {
   const chat = useServerFn(coachChat);
   const [training, setTraining] = useState(true);
   const [lang, setLang] = useState<Lang>("hinglish");
-  const [voiceOut, setVoiceOut] = useState(false);
+  const [voiceOut, setVoiceOut] = useState(true);
   const [phase, setPhase] = useState<Phase>("prompt");
   const [coachMsg, setCoachMsg] = useState<string>(
     "Training mode on hai! 🎓 Aap White ho. Pehle socho:\n\n- **Aap kya move soch rahe ho?**\n- **Opponent ki threat kya ho sakti hai** (abhi koi nahi, kyunki opening hai)?\n- **Pehle 3 moves ka plan** kya hai — center, development, king safety?\n\nApna pehla move chalo jab ready ho.",
