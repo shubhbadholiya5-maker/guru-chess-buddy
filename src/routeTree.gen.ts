@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedTacticsRouteImport } from './routes/_authenticated/tactics'
 import { Route as AuthenticatedPuzzlesRouteImport } from './routes/_authenticated/puzzles'
 import { Route as AuthenticatedPlayRouteImport } from './routes/_authenticated/play'
 import { Route as AuthenticatedOpeningsRouteImport } from './routes/_authenticated/openings'
@@ -33,6 +34,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedTacticsRoute = AuthenticatedTacticsRouteImport.update({
+  id: '/tactics',
+  path: '/tactics',
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedPuzzlesRoute = AuthenticatedPuzzlesRouteImport.update({
   id: '/puzzles',
@@ -80,6 +86,7 @@ export interface FileRoutesByFullPath {
   '/openings': typeof AuthenticatedOpeningsRoute
   '/play': typeof AuthenticatedPlayRoute
   '/puzzles': typeof AuthenticatedPuzzlesRoute
+  '/tactics': typeof AuthenticatedTacticsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -91,6 +98,7 @@ export interface FileRoutesByTo {
   '/openings': typeof AuthenticatedOpeningsRoute
   '/play': typeof AuthenticatedPlayRoute
   '/puzzles': typeof AuthenticatedPuzzlesRoute
+  '/tactics': typeof AuthenticatedTacticsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -104,6 +112,7 @@ export interface FileRoutesById {
   '/_authenticated/openings': typeof AuthenticatedOpeningsRoute
   '/_authenticated/play': typeof AuthenticatedPlayRoute
   '/_authenticated/puzzles': typeof AuthenticatedPuzzlesRoute
+  '/_authenticated/tactics': typeof AuthenticatedTacticsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -117,6 +126,7 @@ export interface FileRouteTypes {
     | '/openings'
     | '/play'
     | '/puzzles'
+    | '/tactics'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -128,6 +138,7 @@ export interface FileRouteTypes {
     | '/openings'
     | '/play'
     | '/puzzles'
+    | '/tactics'
   id:
     | '__root__'
     | '/'
@@ -140,6 +151,7 @@ export interface FileRouteTypes {
     | '/_authenticated/openings'
     | '/_authenticated/play'
     | '/_authenticated/puzzles'
+    | '/_authenticated/tactics'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -170,6 +182,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/tactics': {
+      id: '/_authenticated/tactics'
+      path: '/tactics'
+      fullPath: '/tactics'
+      preLoaderRoute: typeof AuthenticatedTacticsRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/puzzles': {
       id: '/_authenticated/puzzles'
@@ -231,6 +250,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedOpeningsRoute: typeof AuthenticatedOpeningsRoute
   AuthenticatedPlayRoute: typeof AuthenticatedPlayRoute
   AuthenticatedPuzzlesRoute: typeof AuthenticatedPuzzlesRoute
+  AuthenticatedTacticsRoute: typeof AuthenticatedTacticsRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
@@ -241,6 +261,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedOpeningsRoute: AuthenticatedOpeningsRoute,
   AuthenticatedPlayRoute: AuthenticatedPlayRoute,
   AuthenticatedPuzzlesRoute: AuthenticatedPuzzlesRoute,
+  AuthenticatedTacticsRoute: AuthenticatedTacticsRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(

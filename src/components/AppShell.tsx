@@ -1,5 +1,5 @@
 import { Link, useRouter } from "@tanstack/react-router";
-import { Crown, LayoutDashboard, Swords, MessageSquare, Puzzle, FileSearch, BookOpen, LogOut } from "lucide-react";
+import { Crown, LayoutDashboard, Swords, MessageSquare, Puzzle, FileSearch, BookOpen, Target, LogOut } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import type { ReactNode } from "react";
 
@@ -7,8 +7,9 @@ const NAV = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { to: "/play", label: "Play", icon: Swords },
   { to: "/openings", label: "Openings", icon: BookOpen },
-  { to: "/coach", label: "AI Coach", icon: MessageSquare },
-  { to: "/puzzles", label: "Puzzles", icon: Puzzle },
+  { to: "/tactics", label: "Tactics", icon: Target },
+  { to: "/coach", label: "Coach", icon: MessageSquare },
+  { to: "/puzzles", label: "Daily", icon: Puzzle },
   { to: "/analyze", label: "Analyze", icon: FileSearch },
 ] as const;
 
