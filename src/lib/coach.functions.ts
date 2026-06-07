@@ -148,3 +148,58 @@ Keep it under 350 words, use markdown headings.`;
 
     return { summary: reply, blunders, mistakes };
   });
+
+export const explainOpeningMove = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: {
+    openingName: string;
+    side: "white" | "black";
+    moveNumber: number;
+    moveSan: string;
+    movedBy: "w" | "b";
+    movesSoFar: string;
+    fenAfter: string;
+    isLast: boolean;
+    lang?: string;
+  }) =>
+    z.object({
+      openingName: z.string().min(1).max(100),
+      side: z.enum(["white", "black"]),
+      moveNumber: z.number().int().min(1).max(40),
+      moveSan: z.string().min(1).max(10),
+      movedBy: z.enum(["w", "b"]),
+      movesSoFar: z.string().max(500),
+      fenAfter: z.string().max(120),
+      isLast: z.boolean(),
+      lang: z.string().max(20).optional(),
+    }).parse(input),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    const { data: profile } = await supabase.from("profiles").select("rating, language").eq("id", userId).maybeSingle();
+    const rating = profile?.rating ?? 800;
+    const lang = data.lang ?? profile?.language ?? "hinglish";
+
+    const sys = systemPrompt(rating, lang) + `\n\nYou are now in OPENING TRAINER mode. The student is learning the **${data.openingName}** as ${data.side}. They just played the next book move.
+
+For each move respond in this exact short structure (max 90 words):
+1. **Move ka naam/idea** — ek line mein iska purpose (center, develop, king safety, pin, tempo, etc.).
+2. **Kyun?** — 1-2 short sentences explaining the principle.
+3. ${data.isLast ? "**Ab plan kya hai?** — agle 2-3 moves ka idea (kahan castle, kaunsa break, weak square)." : "**Next question** — ek thinking question pucho jisse student agle move ka idea khud soch sake."}
+
+Use **bold** for moves and key squares. Algebraic notation. Keep it warm and conversational.`;
+
+    const userMsg = `Opening: ${data.openingName} (${data.side})
+Moves so far: ${data.movesSoFar}
+Last move played (${data.movedBy === "w" ? "White" : "Black"}, move ${data.moveNumber}): **${data.moveSan}**
+Position FEN: ${data.fenAfter}
+${data.isLast ? "This is the final book move I'll cover — wrap up with the middlegame plan." : "Explain this move, then ask me to think about the next move."}`;
+
+    const reply = await callAI([
+      { role: "system", content: sys },
+      { role: "user", content: userMsg },
+    ]);
+
+    return { reply };
+  });
+

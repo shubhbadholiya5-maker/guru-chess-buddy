@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedPuzzlesRouteImport } from './routes/_authenticated/puzzles'
 import { Route as AuthenticatedPlayRouteImport } from './routes/_authenticated/play'
+import { Route as AuthenticatedOpeningsRouteImport } from './routes/_authenticated/openings'
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedCoachRouteImport } from './routes/_authenticated/coach'
@@ -41,6 +42,11 @@ const AuthenticatedPuzzlesRoute = AuthenticatedPuzzlesRouteImport.update({
 const AuthenticatedPlayRoute = AuthenticatedPlayRouteImport.update({
   id: '/play',
   path: '/play',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedOpeningsRoute = AuthenticatedOpeningsRouteImport.update({
+  id: '/openings',
+  path: '/openings',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedOnboardingRoute = AuthenticatedOnboardingRouteImport.update({
@@ -71,6 +77,7 @@ export interface FileRoutesByFullPath {
   '/coach': typeof AuthenticatedCoachRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
+  '/openings': typeof AuthenticatedOpeningsRoute
   '/play': typeof AuthenticatedPlayRoute
   '/puzzles': typeof AuthenticatedPuzzlesRoute
 }
@@ -81,6 +88,7 @@ export interface FileRoutesByTo {
   '/coach': typeof AuthenticatedCoachRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
+  '/openings': typeof AuthenticatedOpeningsRoute
   '/play': typeof AuthenticatedPlayRoute
   '/puzzles': typeof AuthenticatedPuzzlesRoute
 }
@@ -93,6 +101,7 @@ export interface FileRoutesById {
   '/_authenticated/coach': typeof AuthenticatedCoachRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
+  '/_authenticated/openings': typeof AuthenticatedOpeningsRoute
   '/_authenticated/play': typeof AuthenticatedPlayRoute
   '/_authenticated/puzzles': typeof AuthenticatedPuzzlesRoute
 }
@@ -105,6 +114,7 @@ export interface FileRouteTypes {
     | '/coach'
     | '/dashboard'
     | '/onboarding'
+    | '/openings'
     | '/play'
     | '/puzzles'
   fileRoutesByTo: FileRoutesByTo
@@ -115,6 +125,7 @@ export interface FileRouteTypes {
     | '/coach'
     | '/dashboard'
     | '/onboarding'
+    | '/openings'
     | '/play'
     | '/puzzles'
   id:
@@ -126,6 +137,7 @@ export interface FileRouteTypes {
     | '/_authenticated/coach'
     | '/_authenticated/dashboard'
     | '/_authenticated/onboarding'
+    | '/_authenticated/openings'
     | '/_authenticated/play'
     | '/_authenticated/puzzles'
   fileRoutesById: FileRoutesById
@@ -173,6 +185,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedPlayRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/openings': {
+      id: '/_authenticated/openings'
+      path: '/openings'
+      fullPath: '/openings'
+      preLoaderRoute: typeof AuthenticatedOpeningsRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/onboarding': {
       id: '/_authenticated/onboarding'
       path: '/onboarding'
@@ -209,6 +228,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedCoachRoute: typeof AuthenticatedCoachRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
+  AuthenticatedOpeningsRoute: typeof AuthenticatedOpeningsRoute
   AuthenticatedPlayRoute: typeof AuthenticatedPlayRoute
   AuthenticatedPuzzlesRoute: typeof AuthenticatedPuzzlesRoute
 }
@@ -218,6 +238,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedCoachRoute: AuthenticatedCoachRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
+  AuthenticatedOpeningsRoute: AuthenticatedOpeningsRoute,
   AuthenticatedPlayRoute: AuthenticatedPlayRoute,
   AuthenticatedPuzzlesRoute: AuthenticatedPuzzlesRoute,
 }
@@ -234,13 +255,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
