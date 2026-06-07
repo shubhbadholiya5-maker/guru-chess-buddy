@@ -207,7 +207,30 @@ function TrainerView({ opening, onExit }: { opening: Opening; onExit: () => void
     toast.info(`Hint: ${m.san} — ${m.idea}`);
   };
 
-  const size = useMemo(() => Math.min(560, typeof window !== "undefined" ? window.innerWidth - 60 : 400), []);
+  const [size, setSize] = useState<number>(() => {
+    if (typeof window === "undefined") return 360;
+    return Math.min(560, window.innerWidth - 32);
+  });
+  useEffect(() => {
+    const onResize = () => {
+      const w = window.innerWidth;
+      // on md+ (>=768) leave room for 340px sidebar + gap + padding
+      const max = w >= 768 ? Math.min(560, w - 340 - 80) : w - 48;
+      setSize(Math.max(260, Math.min(560, max)));
+    };
+    onResize();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  // Speak coach messages aloud when voice is on
+  useEffect(() => {
+    if (!voiceOut) return;
+    if (coachLoading) return;
+    if (!coachMsg) return;
+    speak(stripMd(coachMsg), lang);
+  }, [coachMsg, voiceOut, coachLoading, lang]);
+  useEffect(() => () => stopSpeaking(), []);
 
   const progress = Math.round((moveIdx / opening.moves.length) * 100);
   const showContinue = phase === "explaining" && !coachLoading && !completed && moveIdx < opening.moves.length;
