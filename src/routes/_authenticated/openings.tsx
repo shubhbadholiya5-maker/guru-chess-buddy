@@ -133,7 +133,6 @@ function TrainerView({ opening, onExit }: { opening: Opening; onExit: () => void
         },
       });
       setCoachMsg(res.reply);
-      if (voiceOut) speak(stripMd(res.reply), lang);
     } catch (e: any) {
       const fallback = opening.moves[newIdx - 1]?.idea ?? "Move played.";
       setCoachMsg(`⚠️ ${e?.message ?? "Coach offline"}\n\n**Hint:** ${fallback}`);
