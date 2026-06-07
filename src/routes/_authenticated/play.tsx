@@ -152,7 +152,26 @@ function PlayPage() {
     }
   };
 
-  const size = useMemo(() => Math.min(560, typeof window !== "undefined" ? window.innerWidth - 60 : 400), []);
+  const [size, setSize] = useState<number>(() => {
+    if (typeof window === "undefined") return 360;
+    return Math.min(560, window.innerWidth - 32);
+  });
+  useEffect(() => {
+    const onResize = () => {
+      const w = window.innerWidth;
+      const max = w >= 768 ? Math.min(560, w - 320 - 80) : w - 48;
+      setSize(Math.max(260, Math.min(560, max)));
+    };
+    onResize();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  useEffect(() => {
+    if (!voiceOut || coachLoading || !coachMsg) return;
+    speak(stripMd(coachMsg), lang);
+  }, [coachMsg, voiceOut, coachLoading, lang]);
+  useEffect(() => () => stopSpeaking(), []);
 
   return (
     <AppShell title="Play vs Stockfish">
