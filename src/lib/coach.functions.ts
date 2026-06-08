@@ -254,19 +254,3 @@ Phase: ${data.phase}`;
     return { reply };
   });
 
-Use **bold** for moves and key squares. Algebraic notation. Keep it warm and conversational.`;
-
-    const userMsg = `Opening: ${data.openingName} (${data.side})
-Moves so far: ${data.movesSoFar}
-Last move played (${data.movedBy === "w" ? "White" : "Black"}, move ${data.moveNumber}): **${data.moveSan}**
-Position FEN: ${data.fenAfter}
-${data.isLast ? "This is the final book move I'll cover — wrap up with the middlegame plan." : "Explain this move, then ask me to think about the next move."}`;
-
-    const reply = await callAI([
-      { role: "system", content: sys },
-      { role: "user", content: userMsg },
-    ]);
-
-    return { reply };
-  });
-
