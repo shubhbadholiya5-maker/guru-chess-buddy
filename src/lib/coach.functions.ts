@@ -270,3 +270,60 @@ Phase: ${data.phase}`;
     return { reply };
   });
 
+export const explainMiddlegame = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: {
+    lessonTitle: string;
+    theme: string;
+    level: string;
+    side: "white" | "black";
+    fen: string;
+    context: string;
+    keyIdeas: string[];
+    studentThought: string;
+    lang?: string;
+  }) =>
+    z.object({
+      lessonTitle: z.string().min(1).max(120),
+      theme: z.string().min(1).max(40),
+      level: z.string().min(1).max(20),
+      side: z.enum(["white", "black"]),
+      fen: z.string().max(120),
+      context: z.string().max(400),
+      keyIdeas: z.array(z.string().max(300)).max(10),
+      studentThought: z.string().max(2000),
+      lang: z.string().max(20).optional(),
+    }).parse(input),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    const { data: profile } = await supabase.from("profiles").select("rating, language").eq("id", userId).maybeSingle();
+    const rating = profile?.rating ?? 800;
+    const lang = data.lang ?? profile?.language ?? "hinglish";
+
+    const sys = systemPrompt(rating, lang) + `\n\nYou are now in MIDDLEGAME ACADEMY mode. Lesson: **${data.lessonTitle}** (${data.level} / ${data.theme}). Studying from ${data.side}'s perspective.
+
+Position context: ${data.context}
+Key teaching ideas to weave in (do NOT just list them — teach them):
+${data.keyIdeas.map((k, i) => `${i + 1}. ${k}`).join("\n")}
+
+Coaching protocol (max 140 words total):
+1. **Evaluate** the student's thinking briefly — what they saw correctly, what they missed.
+2. **Teach** the core concept tied to this lesson's theme using the position concretely (name squares, files, diagonals, breaks).
+3. **Plan** — give a clear 2-3 move plan or principle the student should remember here.
+4. End with ONE follow-up question that pushes deeper thinking (next move, what if opponent responds X, etc.).
+
+Use **bold** for squares/moves. Algebraic notation. Warm Grandmaster-coach tone.`;
+
+    const userMsg = `Lesson: ${data.lessonTitle}
+FEN: ${data.fen}
+My thinking: ${data.studentThought}`;
+
+    const reply = await callAI([
+      { role: "system", content: sys },
+      { role: "user", content: userMsg },
+    ]);
+
+    return { reply };
+  });
+
