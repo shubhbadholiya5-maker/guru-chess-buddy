@@ -187,6 +187,73 @@ For each move respond in this exact short structure (max 90 words):
 2. **Kyun?** — 1-2 short sentences explaining the principle.
 3. ${data.isLast ? "**Ab plan kya hai?** — agle 2-3 moves ka idea (kahan castle, kaunsa break, weak square)." : "**Next question** — ek thinking question pucho jisse student agle move ka idea khud soch sake."}
 
+export const explainTrap = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: {
+    trapName: string;
+    opening: string;
+    userSide: "white" | "black";
+    movesSoFar: string;
+    lastMoveSan: string;
+    movedBy: "w" | "b";
+    fenAfter: string;
+    phase: "midway" | "complete";
+    idea: string;
+    lesson: string;
+    lang?: string;
+  }) =>
+    z.object({
+      trapName: z.string().min(1).max(100),
+      opening: z.string().min(1).max(100),
+      userSide: z.enum(["white", "black"]),
+      movesSoFar: z.string().max(500),
+      lastMoveSan: z.string().min(1).max(10),
+      movedBy: z.enum(["w", "b"]),
+      fenAfter: z.string().max(120),
+      phase: z.enum(["midway", "complete"]),
+      idea: z.string().max(300),
+      lesson: z.string().max(500),
+      lang: z.string().max(20).optional(),
+    }).parse(input),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    const { data: profile } = await supabase.from("profiles").select("rating, language").eq("id", userId).maybeSingle();
+    const rating = profile?.rating ?? 800;
+    const lang = data.lang ?? profile?.language ?? "hinglish";
+
+    const sys = systemPrompt(rating, lang) + `\n\nYou are now in TRAPS ACADEMY mode. The student is learning the **${data.trapName}** trap from the **${data.opening}**, playing as ${data.userSide} (the trapper).
+
+Trap idea: ${data.idea}
+Defensive lesson: ${data.lesson}
+
+${data.phase === "complete"
+      ? `The trap has been EXECUTED. Give a 3-part wrap-up (max 110 words):
+1. **Trap sprung!** — congratulate + name the tactical motif (e.g. discovered attack, smothered mate, pin, queen trap).
+2. **Why it worked** — the opponent's specific mistake and the geometry that punished it.
+3. **How to avoid as the other side** — the defensive lesson, phrased as a rule.`
+      : `Just played: **${data.lastMoveSan}** by ${data.movedBy === "w" ? "White" : "Black"}.
+Briefly (max 70 words):
+1. **Iss move ka role** in the trap setup (bait, lure, sacrifice, key tempo).
+2. **Next thinking question** — what should the user/opponent be planning, and what trap-specific square/idea to watch.
+Do NOT spoil the final blow.`}
+
+Use **bold** for moves and squares. Algebraic notation. Warm coaching tone.`;
+
+    const userMsg = `Trap: ${data.trapName} (user plays ${data.userSide})
+Moves so far: ${data.movesSoFar}
+Last move: ${data.lastMoveSan} by ${data.movedBy === "w" ? "White" : "Black"}
+FEN: ${data.fenAfter}
+Phase: ${data.phase}`;
+
+    const reply = await callAI([
+      { role: "system", content: sys },
+      { role: "user", content: userMsg },
+    ]);
+
+    return { reply };
+  });
+
 Use **bold** for moves and key squares. Algebraic notation. Keep it warm and conversational.`;
 
     const userMsg = `Opening: ${data.openingName} (${data.side})
