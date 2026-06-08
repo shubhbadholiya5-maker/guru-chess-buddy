@@ -187,6 +187,22 @@ For each move respond in this exact short structure (max 90 words):
 2. **Kyun?** — 1-2 short sentences explaining the principle.
 3. ${data.isLast ? "**Ab plan kya hai?** — agle 2-3 moves ka idea (kahan castle, kaunsa break, weak square)." : "**Next question** — ek thinking question pucho jisse student agle move ka idea khud soch sake."}
 
+Use **bold** for moves and key squares. Algebraic notation. Keep it warm and conversational.`;
+
+    const userMsg = `Opening: ${data.openingName} (${data.side})
+Moves so far: ${data.movesSoFar}
+Last move played (${data.movedBy === "w" ? "White" : "Black"}, move ${data.moveNumber}): **${data.moveSan}**
+Position FEN: ${data.fenAfter}
+${data.isLast ? "This is the final book move I'll cover — wrap up with the middlegame plan." : "Explain this move, then ask me to think about the next move."}`;
+
+    const reply = await callAI([
+      { role: "system", content: sys },
+      { role: "user", content: userMsg },
+    ]);
+
+    return { reply };
+  });
+
 export const explainTrap = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .inputValidator((input: {
