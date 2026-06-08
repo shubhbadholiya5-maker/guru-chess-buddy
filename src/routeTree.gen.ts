@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedTrapsRouteImport } from './routes/_authenticated/traps'
 import { Route as AuthenticatedTacticsRouteImport } from './routes/_authenticated/tactics'
 import { Route as AuthenticatedPuzzlesRouteImport } from './routes/_authenticated/puzzles'
 import { Route as AuthenticatedPlayRouteImport } from './routes/_authenticated/play'
@@ -34,6 +35,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedTrapsRoute = AuthenticatedTrapsRouteImport.update({
+  id: '/traps',
+  path: '/traps',
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedTacticsRoute = AuthenticatedTacticsRouteImport.update({
   id: '/tactics',
@@ -87,6 +93,7 @@ export interface FileRoutesByFullPath {
   '/play': typeof AuthenticatedPlayRoute
   '/puzzles': typeof AuthenticatedPuzzlesRoute
   '/tactics': typeof AuthenticatedTacticsRoute
+  '/traps': typeof AuthenticatedTrapsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -99,6 +106,7 @@ export interface FileRoutesByTo {
   '/play': typeof AuthenticatedPlayRoute
   '/puzzles': typeof AuthenticatedPuzzlesRoute
   '/tactics': typeof AuthenticatedTacticsRoute
+  '/traps': typeof AuthenticatedTrapsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -113,6 +121,7 @@ export interface FileRoutesById {
   '/_authenticated/play': typeof AuthenticatedPlayRoute
   '/_authenticated/puzzles': typeof AuthenticatedPuzzlesRoute
   '/_authenticated/tactics': typeof AuthenticatedTacticsRoute
+  '/_authenticated/traps': typeof AuthenticatedTrapsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -127,6 +136,7 @@ export interface FileRouteTypes {
     | '/play'
     | '/puzzles'
     | '/tactics'
+    | '/traps'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -139,6 +149,7 @@ export interface FileRouteTypes {
     | '/play'
     | '/puzzles'
     | '/tactics'
+    | '/traps'
   id:
     | '__root__'
     | '/'
@@ -152,6 +163,7 @@ export interface FileRouteTypes {
     | '/_authenticated/play'
     | '/_authenticated/puzzles'
     | '/_authenticated/tactics'
+    | '/_authenticated/traps'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -182,6 +194,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/traps': {
+      id: '/_authenticated/traps'
+      path: '/traps'
+      fullPath: '/traps'
+      preLoaderRoute: typeof AuthenticatedTrapsRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/tactics': {
       id: '/_authenticated/tactics'
@@ -251,6 +270,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedPlayRoute: typeof AuthenticatedPlayRoute
   AuthenticatedPuzzlesRoute: typeof AuthenticatedPuzzlesRoute
   AuthenticatedTacticsRoute: typeof AuthenticatedTacticsRoute
+  AuthenticatedTrapsRoute: typeof AuthenticatedTrapsRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
@@ -262,6 +282,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedPlayRoute: AuthenticatedPlayRoute,
   AuthenticatedPuzzlesRoute: AuthenticatedPuzzlesRoute,
   AuthenticatedTacticsRoute: AuthenticatedTacticsRoute,
+  AuthenticatedTrapsRoute: AuthenticatedTrapsRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
@@ -276,13 +297,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
