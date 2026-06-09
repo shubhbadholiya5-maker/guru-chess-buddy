@@ -143,6 +143,45 @@ export type Database = {
         }
         Relationships: []
       }
+      tactic_puzzles: {
+        Row: {
+          created_at: string
+          fen: string
+          hints: string[]
+          id: string
+          lesson: string | null
+          motif: string
+          rating: number
+          solution_uci: string[]
+          source: string | null
+          tier: string
+        }
+        Insert: {
+          created_at?: string
+          fen: string
+          hints?: string[]
+          id: string
+          lesson?: string | null
+          motif: string
+          rating: number
+          solution_uci: string[]
+          source?: string | null
+          tier: string
+        }
+        Update: {
+          created_at?: string
+          fen?: string
+          hints?: string[]
+          id?: string
+          lesson?: string | null
+          motif?: string
+          rating?: number
+          solution_uci?: string[]
+          source?: string | null
+          tier?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
