@@ -327,3 +327,60 @@ My thinking: ${data.studentThought}`;
     return { reply };
   });
 
+export const explainEndgame = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: {
+    title: string;
+    theme: string;
+    level: string;
+    side: "white" | "black";
+    fen: string;
+    context: string;
+    keyIdeas: string[];
+    studentThought: string;
+    lang?: string;
+  }) =>
+    z.object({
+      title: z.string().min(1).max(120),
+      theme: z.string().min(1).max(40),
+      level: z.string().min(1).max(20),
+      side: z.enum(["white", "black"]),
+      fen: z.string().max(120),
+      context: z.string().max(400),
+      keyIdeas: z.array(z.string().max(300)).max(10),
+      studentThought: z.string().max(2000),
+      lang: z.string().max(20).optional(),
+    }).parse(input),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    const { data: profile } = await supabase.from("profiles").select("rating, language").eq("id", userId).maybeSingle();
+    const rating = profile?.rating ?? 800;
+    const lang = data.lang ?? profile?.language ?? "hinglish";
+
+    const sys = systemPrompt(rating, lang) + `\n\nYou are now in ENDGAME ACADEMY mode. Position: **${data.title}** (${data.level} / ${data.theme}). Studying from ${data.side}'s perspective.
+
+Position context: ${data.context}
+Key technical ideas to weave in (teach, don't list):
+${data.keyIdeas.map((k, i) => `${i + 1}. ${k}`).join("\n")}
+
+Coaching protocol (max 140 words total):
+1. **Evaluate** the student's thinking — what's correct, what's missing.
+2. **Teach** the core endgame TECHNIQUE concretely — name key squares, opposition, zugzwang, tempo counts.
+3. **Plan** — give a precise 2-3 move sequence or principle to remember.
+4. End with ONE follow-up question (next move, what if opponent plays X, etc.).
+
+Use **bold** for squares/moves. Algebraic notation. Warm coach tone — endgames need patience, communicate that.`;
+
+    const userMsg = `Endgame: ${data.title}
+FEN: ${data.fen}
+My thinking: ${data.studentThought}`;
+
+    const reply = await callAI([
+      { role: "system", content: sys },
+      { role: "user", content: userMsg },
+    ]);
+
+    return { reply };
+  });
+
