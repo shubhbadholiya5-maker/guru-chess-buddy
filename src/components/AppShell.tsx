@@ -1,5 +1,5 @@
 import { Link, useRouter } from "@tanstack/react-router";
-import { Crown, LayoutDashboard, Swords, MessageSquare, Puzzle, FileSearch, BookOpen, Target, AlertTriangle, Brain, LogOut } from "lucide-react";
+import { Crown, LayoutDashboard, Swords, MessageSquare, Puzzle, FileSearch, BookOpen, Target, AlertTriangle, Brain, Castle, LogOut } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import type { ReactNode } from "react";
 
@@ -8,7 +8,8 @@ const NAV = [
   { to: "/play", label: "Play", icon: Swords },
   { to: "/openings", label: "Openings", icon: BookOpen },
   { to: "/traps", label: "Traps", icon: AlertTriangle },
-  { to: "/middlegame", label: "Middlegame", icon: Brain },
+  { to: "/middlegame", label: "Middle", icon: Brain },
+  { to: "/endgame", label: "Endgame", icon: Castle },
   { to: "/tactics", label: "Tactics", icon: Target },
   { to: "/coach", label: "Coach", icon: MessageSquare },
   { to: "/puzzles", label: "Daily", icon: Puzzle },
@@ -63,13 +64,13 @@ export function AppShell({ children, title }: { children: ReactNode; title?: str
           </div>
         )}
         <div className="px-6 md:px-10 py-6 md:py-8">{children}</div>
-        <nav className="md:hidden fixed bottom-0 inset-x-0 z-30 border-t border-border/60 bg-card/90 backdrop-blur flex justify-around py-2">
+        <nav className="md:hidden fixed bottom-0 inset-x-0 z-30 border-t border-border/60 bg-card/90 backdrop-blur flex justify-around py-2 overflow-x-auto">
           {NAV.map((item) => (
             <Link
               key={item.to}
               to={item.to}
-              className="flex flex-col items-center gap-1 text-[10px] text-muted-foreground px-2 py-1"
-              activeProps={{ className: "flex flex-col items-center gap-1 text-[10px] text-primary px-2 py-1" }}
+              className="flex flex-col items-center gap-1 text-[10px] text-muted-foreground px-2 py-1 shrink-0"
+              activeProps={{ className: "flex flex-col items-center gap-1 text-[10px] text-primary px-2 py-1 shrink-0" }}
             >
               <item.icon className="h-5 w-5" />
               {item.label}
