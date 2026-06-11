@@ -193,11 +193,10 @@ function PuzzlesPanel({ lang, voiceOut }: { lang: Lang; voiceOut: boolean }) {
         <div className="rounded-xl overflow-hidden border border-border/60 bg-card/40 p-2 mx-auto" style={{ width: boardSize + 16 }}>
           {game && (
             <Chessboard
-              options={{
-                position: game.fen(),
-                boardOrientation: orientation,
-                onPieceDrop: ({ sourceSquare, targetSquare }) => tryMove(sourceSquare, targetSquare ?? "", "q"),
-              }}
+              position={game.fen()}
+              boardWidth={boardSize}
+              boardOrientation={orientation}
+              onPieceDrop={(source: string, target: string) => tryMove(source, target, "q")}
             />
           )}
         </div>
@@ -300,17 +299,16 @@ function OpeningExplorerPanel({ lang, voiceOut }: { lang: Lang; voiceOut: boolea
 
         <div className="rounded-xl overflow-hidden border border-border/60 bg-card/40 p-2 mx-auto" style={{ width: boardSize + 16 }}>
           <Chessboard
-            options={{
-              position: fen,
-              onPieceDrop: ({ sourceSquare, targetSquare }) => {
-                try {
-                  const g = new Chess(game.fen());
-                  g.move({ from: sourceSquare, to: targetSquare ?? "", promotion: "q" });
-                  setGame(g);
-                  setFen(g.fen());
-                  return true;
-                } catch { return false; }
-              },
+            position={fen}
+            boardWidth={boardSize}
+            onPieceDrop={(source: string, target: string) => {
+              try {
+                const g = new Chess(game.fen());
+                g.move({ from: source, to: target, promotion: "q" });
+                setGame(g);
+                setFen(g.fen());
+                return true;
+              } catch { return false; }
             }}
           />
         </div>

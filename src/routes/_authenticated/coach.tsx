@@ -18,7 +18,7 @@ type Msg = { role: "user" | "assistant"; content: string };
 function CoachPage() {
   const chat = useServerFn(coachChat);
   const [messages, setMessages] = useState<Msg[]>([
-    { role: "assistant", content: "Namaste! I'm **Guru**, your chess coach. What shall we work on today — openings, tactics, a tough position, or one of your games?" },
+    { role: "assistant", content: pickOpener() },
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
