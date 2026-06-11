@@ -18,7 +18,7 @@ type Msg = { role: "user" | "assistant"; content: string };
 function CoachPage() {
   const chat = useServerFn(coachChat);
   const [messages, setMessages] = useState<Msg[]>([
-    { role: "assistant", content: "Namaste! I'm **Guru**, your chess coach. What shall we work on today — openings, tactics, a tough position, or one of your games?" },
+    { role: "assistant", content: pickOpener() },
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -121,4 +121,15 @@ function CoachPage() {
 
 function stripMd(s: string) {
   return s.replace(/[#*_`>\[\]()]/g, "").replace(/\s+/g, " ").trim();
+}
+
+function pickOpener(): string {
+  const openers = [
+    "Ready to sharpen your game? Drop a position, paste a PGN, or just tell me what's on your mind.",
+    "Let's get to work. What are we analyzing — an opening, a tough middlegame, or a game you just played?",
+    "Lock in. Share a FEN, a PGN, or ask me anything about chess strategy.",
+    "Okay coach mode on. What's the position troubling you?",
+    "Sharp eyes today. Pick your battle — tactics, openings, endgames, or game review.",
+  ];
+  return openers[Math.floor(Math.random() * openers.length)];
 }

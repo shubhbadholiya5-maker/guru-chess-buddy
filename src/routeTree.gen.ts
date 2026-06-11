@@ -19,6 +19,7 @@ import { Route as AuthenticatedPlayRouteImport } from './routes/_authenticated/p
 import { Route as AuthenticatedOpeningsRouteImport } from './routes/_authenticated/openings'
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedMiddlegameRouteImport } from './routes/_authenticated/middlegame'
+import { Route as AuthenticatedExplorerRouteImport } from './routes/_authenticated/explorer'
 import { Route as AuthenticatedEndgameRouteImport } from './routes/_authenticated/endgame'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedCoachRouteImport } from './routes/_authenticated/coach'
@@ -73,6 +74,11 @@ const AuthenticatedMiddlegameRoute = AuthenticatedMiddlegameRouteImport.update({
   path: '/middlegame',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedExplorerRoute = AuthenticatedExplorerRouteImport.update({
+  id: '/explorer',
+  path: '/explorer',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedEndgameRoute = AuthenticatedEndgameRouteImport.update({
   id: '/endgame',
   path: '/endgame',
@@ -101,6 +107,7 @@ export interface FileRoutesByFullPath {
   '/coach': typeof AuthenticatedCoachRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/endgame': typeof AuthenticatedEndgameRoute
+  '/explorer': typeof AuthenticatedExplorerRoute
   '/middlegame': typeof AuthenticatedMiddlegameRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/openings': typeof AuthenticatedOpeningsRoute
@@ -116,6 +123,7 @@ export interface FileRoutesByTo {
   '/coach': typeof AuthenticatedCoachRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/endgame': typeof AuthenticatedEndgameRoute
+  '/explorer': typeof AuthenticatedExplorerRoute
   '/middlegame': typeof AuthenticatedMiddlegameRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/openings': typeof AuthenticatedOpeningsRoute
@@ -133,6 +141,7 @@ export interface FileRoutesById {
   '/_authenticated/coach': typeof AuthenticatedCoachRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/endgame': typeof AuthenticatedEndgameRoute
+  '/_authenticated/explorer': typeof AuthenticatedExplorerRoute
   '/_authenticated/middlegame': typeof AuthenticatedMiddlegameRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
   '/_authenticated/openings': typeof AuthenticatedOpeningsRoute
@@ -150,6 +159,7 @@ export interface FileRouteTypes {
     | '/coach'
     | '/dashboard'
     | '/endgame'
+    | '/explorer'
     | '/middlegame'
     | '/onboarding'
     | '/openings'
@@ -165,6 +175,7 @@ export interface FileRouteTypes {
     | '/coach'
     | '/dashboard'
     | '/endgame'
+    | '/explorer'
     | '/middlegame'
     | '/onboarding'
     | '/openings'
@@ -181,6 +192,7 @@ export interface FileRouteTypes {
     | '/_authenticated/coach'
     | '/_authenticated/dashboard'
     | '/_authenticated/endgame'
+    | '/_authenticated/explorer'
     | '/_authenticated/middlegame'
     | '/_authenticated/onboarding'
     | '/_authenticated/openings'
@@ -268,6 +280,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMiddlegameRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/explorer': {
+      id: '/_authenticated/explorer'
+      path: '/explorer'
+      fullPath: '/explorer'
+      preLoaderRoute: typeof AuthenticatedExplorerRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/endgame': {
       id: '/_authenticated/endgame'
       path: '/endgame'
@@ -304,6 +323,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedCoachRoute: typeof AuthenticatedCoachRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedEndgameRoute: typeof AuthenticatedEndgameRoute
+  AuthenticatedExplorerRoute: typeof AuthenticatedExplorerRoute
   AuthenticatedMiddlegameRoute: typeof AuthenticatedMiddlegameRoute
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
   AuthenticatedOpeningsRoute: typeof AuthenticatedOpeningsRoute
@@ -318,6 +338,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedCoachRoute: AuthenticatedCoachRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedEndgameRoute: AuthenticatedEndgameRoute,
+  AuthenticatedExplorerRoute: AuthenticatedExplorerRoute,
   AuthenticatedMiddlegameRoute: AuthenticatedMiddlegameRoute,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
   AuthenticatedOpeningsRoute: AuthenticatedOpeningsRoute,
