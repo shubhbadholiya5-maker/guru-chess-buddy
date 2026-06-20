@@ -1,5 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
 import { useServerFn } from "@tanstack/react-start";
@@ -10,7 +10,7 @@ import { explainTrap } from "@/lib/coach.functions";
 import { supabase } from "@/integrations/supabase/client";
 import { speak, stopSpeaking, type Lang } from "@/lib/voice";
 import { toast } from "sonner";
-import { AlertTriangle, GraduationCap, Volume2, VolumeX, RotateCcw, ChevronLeft } from "lucide-react";
+import { AlertTriangle, GraduationCap, Volume2, VolumeX, RotateCcw, ChevronLeft, Sparkles } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/traps")({
   component: TrapsPage,
