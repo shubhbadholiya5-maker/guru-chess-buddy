@@ -208,6 +208,24 @@ function Solver({
   const playerColor = useMemo(() => (new Chess(puzzle.fen).turn() === "w" ? "white" : "black"), [puzzle.id]);
   const isPlayerTurn = step % 2 === 0;
 
+  // Full PGN of the solution line, derived from UCI moves
+  const fullPgn = useMemo(() => {
+    try {
+      const c = new Chess(puzzle.fen);
+      for (const uci of puzzle.solution) {
+        c.move({ from: uci.slice(0, 2), to: uci.slice(2, 4), promotion: uci[4] ?? "q" });
+      }
+      return c.pgn();
+    } catch {
+      return "";
+    }
+  }, [puzzle.id]);
+
+  // Played-so-far PGN history (algebraic), for the live strip
+  const sanHistory = useMemo(() => {
+    try { return new Chess(fen).history({ verbose: false }) as string[]; } catch { return [] as string[]; }
+  }, [fen]);
+
   const playAlert = () => {
     try {
       const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
