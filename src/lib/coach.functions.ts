@@ -15,8 +15,9 @@ function languageInstruction(lang: string): string {
 function systemPrompt(rating: number, lang: string): string {
   return `You are Guru — a 2700+ Grandmaster chess coach with deep positional and tactical mastery (Carlsen / Kasparov / Polgar level intuition). The student is rated ~${rating} and aiming for 2000+.
 
-PERSONA — GRANDMASTER COACH:
-- Speak like a top GM sitting beside the student: confident, sharp, warm, never robotic.
+PERSONA — GRANDMASTER COACH (warm + empathetic):
+- Speak like a top GM sitting beside the student: confident, sharp, AND deeply caring. Encourage on every reply.
+- The student is here to grow. Be patient, never condescending. Acknowledge effort before correction ("Good thinking on the pin idea — par ek aur tactic hai jo aur strong hai…").
 - Show real chess depth: name concrete squares, files, diagonals, pawn breaks, weak color complexes, key tempi.
 - Reference patterns (Greek gift, Lasker sacrifice, minority attack, Carlsbad structure, Lucena, Vancura) when they fit — explain in one line.
 - Calculate concretely: candidate moves → forcing replies → 2–4 ply visualization → evaluation.
@@ -144,6 +145,40 @@ Keep it under 350 words, use markdown headings.`;
 
     return { summary: reply, blunders, mistakes };
   });
+
+export const analyzeBatchPgns = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: { pgns: string[]; lang?: string }) =>
+    z.object({
+      pgns: z.array(z.string().min(10).max(20000)).min(1).max(20),
+      lang: z.string().max(20).optional(),
+    }).parse(input),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabase, userId } = context;
+    const { data: profile } = await supabase.from("profiles").select("rating, language").eq("id", userId).maybeSingle();
+    const rating = profile?.rating ?? 800;
+    const lang = data.lang ?? profile?.language ?? "en";
+    const sys = systemPrompt(rating, lang) + `\n\nBATCH GAME REVIEW: Multiple PGNs follow. Look for **recurring patterns** across games — opening choices, repeated tactical oversights, time-management issues, structural weaknesses. Be empathetic — the student trusts you. Output:
+1. **Top 3 recurring weaknesses** (with one concrete example per pattern, citing game# and move#).
+2. **Why** these keep happening (root cause, in plain language).
+3. **Personalized 7-day fix plan** — daily theme + one drill (link to internal modules: openings, tactics, traps, middlegame, endgame).
+4. **One encouragement** to close.
+
+Max 500 words. Use markdown headings.`;
+
+    const joined = data.pgns
+      .map((p, i) => `===== Game ${i + 1} =====\n${p}`)
+      .join("\n\n");
+
+    const reply = await callAI([
+      { role: "system", content: sys },
+      { role: "user", content: `Here are my recent ${data.pgns.length} games:\n\n${joined}` },
+    ]);
+
+    return { summary: reply, count: data.pgns.length };
+  });
+
 
 export const explainOpeningMove = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])

@@ -28,7 +28,7 @@ export function AppShell({ children, title }: { children: ReactNode; title?: str
       <aside className="hidden md:flex w-60 flex-col border-r border-border/60 bg-card/40 backdrop-blur">
         <Link to="/dashboard" className="flex items-center gap-2 px-5 py-5 border-b border-border/60">
           <Crown className="h-6 w-6 text-primary" />
-          <span className="font-display text-xl gold-gradient">Guru Chess</span>
+          <span className="font-display text-xl gold-gradient">Chess Trainer</span>
         </Link>
         <nav className="flex-1 p-3 space-y-1">
           {NAV.map((item) => (
@@ -54,7 +54,7 @@ export function AppShell({ children, title }: { children: ReactNode; title?: str
         <header className="md:hidden flex items-center justify-between px-4 py-3 border-b border-border/60 bg-card/40 backdrop-blur">
           <Link to="/dashboard" className="flex items-center gap-2">
             <Crown className="h-5 w-5 text-primary" />
-            <span className="font-display text-lg gold-gradient">Guru Chess</span>
+            <span className="font-display text-lg gold-gradient">Chess Trainer</span>
           </Link>
           <button onClick={signOut} className="text-xs text-muted-foreground">Sign out</button>
         </header>

@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
@@ -208,6 +208,25 @@ function Solver({
   const playerColor = useMemo(() => (new Chess(puzzle.fen).turn() === "w" ? "white" : "black"), [puzzle.id]);
   const isPlayerTurn = step % 2 === 0;
 
+  // Full PGN of the solution line, derived from UCI moves
+  const fullPgn = useMemo(() => {
+    try {
+      const c = new Chess(puzzle.fen);
+      for (const uci of puzzle.solution) {
+        c.move({ from: uci.slice(0, 2), to: uci.slice(2, 4), promotion: uci[4] ?? "q" });
+      }
+      return c.pgn();
+    } catch {
+      return "";
+    }
+  }, [puzzle.id]);
+
+  // Played-so-far PGN history (algebraic), for the live strip
+  // Played-so-far SAN history (from the actual game ref)
+  const sanHistory = useMemo(() => {
+    try { return gameRef.current.history() as string[]; } catch { return [] as string[]; }
+  }, [fen]);
+
   const playAlert = () => {
     try {
       const ctx = new (window.AudioContext || (window as any).webkitAudioContext)();
@@ -402,6 +421,35 @@ function Solver({
                 <Check className="h-3 w-3" /> Saved to your progress
               </div>
             )}
+          </div>
+
+          {/* PGN strip + Practice from FEN */}
+          <div className="card-elevated rounded-xl p-4 space-y-2">
+            <div className="text-xs uppercase tracking-wider text-muted-foreground">Moves</div>
+            <div className="text-xs font-mono bg-secondary/40 rounded-md p-2 break-words leading-relaxed min-h-[40px]">
+              {sanHistory.length === 0 ? (
+                <span className="text-muted-foreground italic">No moves yet — chalo board pe.</span>
+              ) : (
+                sanHistory.map((m, i) => (
+                  <span key={i} className="mr-2">
+                    {i % 2 === 0 ? <span className="text-muted-foreground">{Math.floor(i / 2) + 1}.</span> : null} {m}
+                  </span>
+                ))
+              )}
+            </div>
+            {phase === "solved" && fullPgn && (
+              <details className="text-xs">
+                <summary className="cursor-pointer text-muted-foreground hover:text-foreground">Full solution PGN</summary>
+                <pre className="mt-2 whitespace-pre-wrap font-mono bg-secondary/40 rounded-md p-2 text-[11px] leading-relaxed">{fullPgn}</pre>
+              </details>
+            )}
+            <Link
+              to="/play"
+              search={{ fen: puzzle.fen }}
+              className="w-full py-2 rounded-md border border-primary/40 hover:bg-secondary text-sm flex items-center justify-center gap-2"
+            >
+              <Sparkles className="h-4 w-4" /> Practice from this position
+            </Link>
           </div>
         </div>
       </div>

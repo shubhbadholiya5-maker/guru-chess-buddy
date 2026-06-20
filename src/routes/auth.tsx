@@ -6,7 +6,7 @@ import { Crown } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/auth")({
-  head: () => ({ meta: [{ title: "Sign in — Guru Chess Coach" }] }),
+  head: () => ({ meta: [{ title: "Sign in — Chess Trainer" }] }),
   component: AuthPage,
 });
 
@@ -25,13 +25,14 @@ function AuthPage() {
 
   const onGoogle = async () => {
     setLoading(true);
-    const r = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin + "/auth/callback" });
+    const r = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
     if (r.error) {
       toast.error(r.error.message);
       setLoading(false);
       return;
     }
-    if (!r.redirected) router.navigate({ to: "/dashboard", replace: true });
+    if (r.redirected) return; // browser will navigate
+    router.navigate({ to: "/dashboard", replace: true });
   };
 
   const onEmail = async (e: React.FormEvent) => {
@@ -62,7 +63,7 @@ function AuthPage() {
       <div className="w-full max-w-md card-elevated rounded-2xl p-8">
         <Link to="/" className="flex items-center justify-center gap-2 mb-6">
           <Crown className="h-6 w-6 text-primary" />
-          <span className="font-display text-2xl gold-gradient">Guru Chess Coach</span>
+          <span className="font-display text-2xl gold-gradient">Chess Trainer</span>
         </Link>
         <h1 className="font-display text-2xl text-center">{mode === "signin" ? "Welcome back" : "Create your account"}</h1>
         <p className="text-sm text-center text-muted-foreground mt-1">Sign in to start coaching.</p>

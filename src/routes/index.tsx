@@ -4,9 +4,9 @@ import { Crown, Bot, Puzzle, Swords, Mic, FileSearch } from "lucide-react";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Guru Chess Coach — Your personal Grandmaster" },
+      { title: "Chess Trainer — Your personal Grandmaster" },
       { name: "description", content: "Learn chess from a true AI coach. Personalized training, Socratic lessons, voice in English & Hindi, daily tactics, and full game analysis up to 2000 rating." },
-      { property: "og:title", content: "Guru Chess Coach" },
+      { property: "og:title", content: "Chess Trainer" },
       { property: "og:description", content: "The world's best AI chess coach for beginners to 2000-rated players." },
     ],
   }),
@@ -29,7 +29,7 @@ function Landing() {
       <header className="max-w-6xl mx-auto flex items-center justify-between px-6 py-6">
         <div className="flex items-center gap-2">
           <Crown className="h-6 w-6 text-primary" />
-          <span className="font-display text-xl gold-gradient">Guru Chess Coach</span>
+          <span className="font-display text-xl gold-gradient">Chess Trainer</span>
         </div>
         <Link to="/auth" className="px-4 py-2 rounded-md text-sm font-medium bg-primary text-primary-foreground hover:opacity-90">
           Sign in
@@ -65,7 +65,7 @@ function Landing() {
       </section>
 
       <footer className="border-t border-border/60 py-8 text-center text-xs text-muted-foreground">
-        © {new Date().getFullYear()} Guru Chess Coach. Built with care for chess lovers.
+        © {new Date().getFullYear()} Chess Trainer. Built with care for chess lovers.
       </footer>
     </div>
   );

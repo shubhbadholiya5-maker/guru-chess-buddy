@@ -13,6 +13,9 @@ import { toast } from "sonner";
 import { GraduationCap, Volume2, VolumeX } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/play")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    fen: typeof search.fen === "string" ? (search.fen as string) : undefined,
+  }),
   component: PlayPage,
 });
 
@@ -27,7 +30,14 @@ const LEVELS = [
 type Phase = "idle" | "prompt" | "feedback";
 
 function PlayPage() {
-  const [game] = useState(() => new Chess());
+  const { fen: initialFen } = Route.useSearch();
+  const [game] = useState(() => {
+    const c = new Chess();
+    if (initialFen) {
+      try { c.load(initialFen); } catch { /* invalid fen, ignore */ }
+    }
+    return c;
+  });
   const [fen, setFen] = useState(game.fen());
   const [level, setLevel] = useState(1);
   const [thinking, setThinking] = useState(false);
