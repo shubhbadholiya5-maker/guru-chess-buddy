@@ -1,5 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Chess } from "chess.js";
 import { Chessboard } from "react-chessboard";
 import { useServerFn } from "@tanstack/react-start";
@@ -10,7 +10,7 @@ import { explainTrap } from "@/lib/coach.functions";
 import { supabase } from "@/integrations/supabase/client";
 import { speak, stopSpeaking, type Lang } from "@/lib/voice";
 import { toast } from "sonner";
-import { AlertTriangle, GraduationCap, Volume2, VolumeX, RotateCcw, ChevronLeft } from "lucide-react";
+import { AlertTriangle, GraduationCap, Volume2, VolumeX, RotateCcw, ChevronLeft, Sparkles } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/traps")({
   component: TrapsPage,
@@ -274,14 +274,54 @@ function TrapRunner({ trap, onExit }: { trap: Trap; onExit: () => void }) {
               </button>
             )}
           </div>
-          <div className="card-elevated rounded-xl p-4">
-            <div className="text-xs uppercase tracking-wider text-muted-foreground mb-1">Moves played</div>
-            <div className="font-mono text-sm leading-relaxed break-words">
-              {game.history().length === 0 ? <span className="text-muted-foreground italic">— still empty —</span> : game.history().join(" ")}
-            </div>
-          </div>
+          <TrapPgnStrip game={game} fen={fen} trap={trap} phase={phase} />
         </div>
       </div>
+    </div>
+  );
+}
+
+function TrapPgnStrip({ game, fen, trap, phase }: { game: Chess; fen: string; trap: Trap; phase: Phase }) {
+  const sanHistory = useMemo(() => {
+    try { return game.history() as string[]; } catch { return [] as string[]; }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fen]);
+  const fullPgn = useMemo(() => {
+    try {
+      const c = new Chess();
+      for (const san of trap.moves) {
+        c.move(san);
+      }
+      return c.pgn();
+    } catch { return ""; }
+  }, [trap.id]);
+  return (
+    <div className="card-elevated rounded-xl p-4 space-y-2">
+      <div className="text-xs uppercase tracking-wider text-muted-foreground">Moves</div>
+      <div className="text-xs font-mono bg-secondary/40 rounded-md p-2 break-words leading-relaxed min-h-[40px]">
+        {sanHistory.length === 0 ? (
+          <span className="text-muted-foreground italic">No moves yet — chalo board pe.</span>
+        ) : (
+          sanHistory.map((m, i) => (
+            <span key={i} className="mr-2">
+              {i % 2 === 0 ? <span className="text-muted-foreground">{Math.floor(i / 2) + 1}.</span> : null} {m}
+            </span>
+          ))
+        )}
+      </div>
+      {phase === "completed" && fullPgn && (
+        <details className="text-xs" open>
+          <summary className="cursor-pointer text-muted-foreground hover:text-foreground">Full trap PGN</summary>
+          <pre className="mt-2 whitespace-pre-wrap font-mono bg-secondary/40 rounded-md p-2 text-[11px] leading-relaxed">{fullPgn}</pre>
+        </details>
+      )}
+      <Link
+        to="/play"
+        search={{ fen }}
+        className="w-full py-2 rounded-md border border-primary/40 hover:bg-secondary text-sm flex items-center justify-center gap-2"
+      >
+        <Sparkles className="h-4 w-4" /> Practice from this position
+      </Link>
     </div>
   );
 }

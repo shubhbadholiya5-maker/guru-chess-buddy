@@ -22,6 +22,7 @@ import { Route as AuthenticatedMiddlegameRouteImport } from './routes/_authentic
 import { Route as AuthenticatedExplorerRouteImport } from './routes/_authenticated/explorer'
 import { Route as AuthenticatedEndgameRouteImport } from './routes/_authenticated/endgame'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedDailyPlanRouteImport } from './routes/_authenticated/daily-plan'
 import { Route as AuthenticatedCoachRouteImport } from './routes/_authenticated/coach'
 import { Route as AuthenticatedAnalyzeRouteImport } from './routes/_authenticated/analyze'
 
@@ -89,6 +90,11 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedDailyPlanRoute = AuthenticatedDailyPlanRouteImport.update({
+  id: '/daily-plan',
+  path: '/daily-plan',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedCoachRoute = AuthenticatedCoachRouteImport.update({
   id: '/coach',
   path: '/coach',
@@ -105,6 +111,7 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/analyze': typeof AuthenticatedAnalyzeRoute
   '/coach': typeof AuthenticatedCoachRoute
+  '/daily-plan': typeof AuthenticatedDailyPlanRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/endgame': typeof AuthenticatedEndgameRoute
   '/explorer': typeof AuthenticatedExplorerRoute
@@ -121,6 +128,7 @@ export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/analyze': typeof AuthenticatedAnalyzeRoute
   '/coach': typeof AuthenticatedCoachRoute
+  '/daily-plan': typeof AuthenticatedDailyPlanRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/endgame': typeof AuthenticatedEndgameRoute
   '/explorer': typeof AuthenticatedExplorerRoute
@@ -139,6 +147,7 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/_authenticated/analyze': typeof AuthenticatedAnalyzeRoute
   '/_authenticated/coach': typeof AuthenticatedCoachRoute
+  '/_authenticated/daily-plan': typeof AuthenticatedDailyPlanRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/endgame': typeof AuthenticatedEndgameRoute
   '/_authenticated/explorer': typeof AuthenticatedExplorerRoute
@@ -157,6 +166,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/analyze'
     | '/coach'
+    | '/daily-plan'
     | '/dashboard'
     | '/endgame'
     | '/explorer'
@@ -173,6 +183,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/analyze'
     | '/coach'
+    | '/daily-plan'
     | '/dashboard'
     | '/endgame'
     | '/explorer'
@@ -190,6 +201,7 @@ export interface FileRouteTypes {
     | '/auth'
     | '/_authenticated/analyze'
     | '/_authenticated/coach'
+    | '/_authenticated/daily-plan'
     | '/_authenticated/dashboard'
     | '/_authenticated/endgame'
     | '/_authenticated/explorer'
@@ -301,6 +313,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/daily-plan': {
+      id: '/_authenticated/daily-plan'
+      path: '/daily-plan'
+      fullPath: '/daily-plan'
+      preLoaderRoute: typeof AuthenticatedDailyPlanRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/coach': {
       id: '/_authenticated/coach'
       path: '/coach'
@@ -321,6 +340,7 @@ declare module '@tanstack/react-router' {
 interface AuthenticatedRouteChildren {
   AuthenticatedAnalyzeRoute: typeof AuthenticatedAnalyzeRoute
   AuthenticatedCoachRoute: typeof AuthenticatedCoachRoute
+  AuthenticatedDailyPlanRoute: typeof AuthenticatedDailyPlanRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedEndgameRoute: typeof AuthenticatedEndgameRoute
   AuthenticatedExplorerRoute: typeof AuthenticatedExplorerRoute
@@ -336,6 +356,7 @@ interface AuthenticatedRouteChildren {
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAnalyzeRoute: AuthenticatedAnalyzeRoute,
   AuthenticatedCoachRoute: AuthenticatedCoachRoute,
+  AuthenticatedDailyPlanRoute: AuthenticatedDailyPlanRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedEndgameRoute: AuthenticatedEndgameRoute,
   AuthenticatedExplorerRoute: AuthenticatedExplorerRoute,
