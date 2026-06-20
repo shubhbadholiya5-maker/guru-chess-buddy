@@ -25,13 +25,14 @@ function AuthPage() {
 
   const onGoogle = async () => {
     setLoading(true);
-    const r = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin + "/auth/callback" });
+    const r = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
     if (r.error) {
       toast.error(r.error.message);
       setLoading(false);
       return;
     }
-    if (!r.redirected) router.navigate({ to: "/dashboard", replace: true });
+    if (r.redirected) return; // browser will navigate
+    router.navigate({ to: "/dashboard", replace: true });
   };
 
   const onEmail = async (e: React.FormEvent) => {
