@@ -422,6 +422,35 @@ function Solver({
               </div>
             )}
           </div>
+
+          {/* PGN strip + Practice from FEN */}
+          <div className="card-elevated rounded-xl p-4 space-y-2">
+            <div className="text-xs uppercase tracking-wider text-muted-foreground">Moves</div>
+            <div className="text-xs font-mono bg-secondary/40 rounded-md p-2 break-words leading-relaxed min-h-[40px]">
+              {sanHistory.length === 0 ? (
+                <span className="text-muted-foreground italic">No moves yet — chalo board pe.</span>
+              ) : (
+                sanHistory.map((m, i) => (
+                  <span key={i} className="mr-2">
+                    {i % 2 === 0 ? <span className="text-muted-foreground">{Math.floor(i / 2) + 1}.</span> : null} {m}
+                  </span>
+                ))
+              )}
+            </div>
+            {phase === "solved" && fullPgn && (
+              <details className="text-xs">
+                <summary className="cursor-pointer text-muted-foreground hover:text-foreground">Full solution PGN</summary>
+                <pre className="mt-2 whitespace-pre-wrap font-mono bg-secondary/40 rounded-md p-2 text-[11px] leading-relaxed">{fullPgn}</pre>
+              </details>
+            )}
+            <Link
+              to="/play"
+              search={{ fen: puzzle.fen }}
+              className="w-full py-2 rounded-md border border-primary/40 hover:bg-secondary text-sm flex items-center justify-center gap-2"
+            >
+              <Sparkles className="h-4 w-4" /> Practice from this position
+            </Link>
+          </div>
         </div>
       </div>
     </div>
