@@ -222,8 +222,9 @@ function Solver({
   }, [puzzle.id]);
 
   // Played-so-far PGN history (algebraic), for the live strip
+  // Played-so-far SAN history (from the actual game ref)
   const sanHistory = useMemo(() => {
-    try { return new Chess(fen).history({ verbose: false }) as string[]; } catch { return [] as string[]; }
+    try { return gameRef.current.history() as string[]; } catch { return [] as string[]; }
   }, [fen]);
 
   const playAlert = () => {
