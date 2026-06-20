@@ -20,7 +20,7 @@ function DailyPlanPage() {
   const [completed, setCompleted] = useState<Record<number, boolean>>({});
 
   useEffect(() => {
-    fetchPlan({ data: undefined as never })
+    fetchPlan()
       .then(setPlan)
       .catch((e) => toast.error(e?.message ?? "Could not load plan"))
       .finally(() => setLoading(false));
