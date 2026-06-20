@@ -29,10 +29,14 @@ export const fetchLichessPuzzle = createServerFn({ method: "POST" })
     const min = data.minRating ?? 1200;
     const diff = min < 900 ? "easiest" : min < 1200 ? "easier" : min < 1500 ? "normal" : min < 1800 ? "harder" : "hardest";
 
-    // Try a few times to land within band
+    // Try a few times to land within band; retry on 429
     for (let attempt = 0; attempt < 6; attempt++) {
       const url = `https://lichess.org/api/puzzle/next?angle=${encodeURIComponent(theme)}&difficulty=${diff}`;
       const res = await fetch(url, { headers: { Accept: "application/json" } });
+      if (res.status === 429) {
+        await new Promise((r) => setTimeout(r, 1200 + attempt * 600));
+        continue;
+      }
       if (!res.ok) continue;
       const j: any = await res.json();
       const p = j?.puzzle;
