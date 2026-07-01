@@ -19,12 +19,14 @@ import { Route as AuthenticatedPlayRouteImport } from './routes/_authenticated/p
 import { Route as AuthenticatedOpeningsRouteImport } from './routes/_authenticated/openings'
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedMiddlegameRouteImport } from './routes/_authenticated/middlegame'
+import { Route as AuthenticatedMasterclassRouteImport } from './routes/_authenticated/masterclass'
 import { Route as AuthenticatedExplorerRouteImport } from './routes/_authenticated/explorer'
 import { Route as AuthenticatedEndgameRouteImport } from './routes/_authenticated/endgame'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedDailyPlanRouteImport } from './routes/_authenticated/daily-plan'
 import { Route as AuthenticatedCoachRouteImport } from './routes/_authenticated/coach'
 import { Route as AuthenticatedAnalyzeRouteImport } from './routes/_authenticated/analyze'
+import { Route as AuthenticatedAcademiesRouteImport } from './routes/_authenticated/academies'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -75,6 +77,12 @@ const AuthenticatedMiddlegameRoute = AuthenticatedMiddlegameRouteImport.update({
   path: '/middlegame',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedMasterclassRoute =
+  AuthenticatedMasterclassRouteImport.update({
+    id: '/masterclass',
+    path: '/masterclass',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedExplorerRoute = AuthenticatedExplorerRouteImport.update({
   id: '/explorer',
   path: '/explorer',
@@ -105,16 +113,23 @@ const AuthenticatedAnalyzeRoute = AuthenticatedAnalyzeRouteImport.update({
   path: '/analyze',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedAcademiesRoute = AuthenticatedAcademiesRouteImport.update({
+  id: '/academies',
+  path: '/academies',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/academies': typeof AuthenticatedAcademiesRoute
   '/analyze': typeof AuthenticatedAnalyzeRoute
   '/coach': typeof AuthenticatedCoachRoute
   '/daily-plan': typeof AuthenticatedDailyPlanRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/endgame': typeof AuthenticatedEndgameRoute
   '/explorer': typeof AuthenticatedExplorerRoute
+  '/masterclass': typeof AuthenticatedMasterclassRoute
   '/middlegame': typeof AuthenticatedMiddlegameRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/openings': typeof AuthenticatedOpeningsRoute
@@ -126,12 +141,14 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/academies': typeof AuthenticatedAcademiesRoute
   '/analyze': typeof AuthenticatedAnalyzeRoute
   '/coach': typeof AuthenticatedCoachRoute
   '/daily-plan': typeof AuthenticatedDailyPlanRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/endgame': typeof AuthenticatedEndgameRoute
   '/explorer': typeof AuthenticatedExplorerRoute
+  '/masterclass': typeof AuthenticatedMasterclassRoute
   '/middlegame': typeof AuthenticatedMiddlegameRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/openings': typeof AuthenticatedOpeningsRoute
@@ -145,12 +162,14 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/auth': typeof AuthRoute
+  '/_authenticated/academies': typeof AuthenticatedAcademiesRoute
   '/_authenticated/analyze': typeof AuthenticatedAnalyzeRoute
   '/_authenticated/coach': typeof AuthenticatedCoachRoute
   '/_authenticated/daily-plan': typeof AuthenticatedDailyPlanRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/endgame': typeof AuthenticatedEndgameRoute
   '/_authenticated/explorer': typeof AuthenticatedExplorerRoute
+  '/_authenticated/masterclass': typeof AuthenticatedMasterclassRoute
   '/_authenticated/middlegame': typeof AuthenticatedMiddlegameRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
   '/_authenticated/openings': typeof AuthenticatedOpeningsRoute
@@ -164,12 +183,14 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/academies'
     | '/analyze'
     | '/coach'
     | '/daily-plan'
     | '/dashboard'
     | '/endgame'
     | '/explorer'
+    | '/masterclass'
     | '/middlegame'
     | '/onboarding'
     | '/openings'
@@ -181,12 +202,14 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/academies'
     | '/analyze'
     | '/coach'
     | '/daily-plan'
     | '/dashboard'
     | '/endgame'
     | '/explorer'
+    | '/masterclass'
     | '/middlegame'
     | '/onboarding'
     | '/openings'
@@ -199,12 +222,14 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/_authenticated/academies'
     | '/_authenticated/analyze'
     | '/_authenticated/coach'
     | '/_authenticated/daily-plan'
     | '/_authenticated/dashboard'
     | '/_authenticated/endgame'
     | '/_authenticated/explorer'
+    | '/_authenticated/masterclass'
     | '/_authenticated/middlegame'
     | '/_authenticated/onboarding'
     | '/_authenticated/openings'
@@ -292,6 +317,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMiddlegameRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/masterclass': {
+      id: '/_authenticated/masterclass'
+      path: '/masterclass'
+      fullPath: '/masterclass'
+      preLoaderRoute: typeof AuthenticatedMasterclassRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/explorer': {
       id: '/_authenticated/explorer'
       path: '/explorer'
@@ -334,16 +366,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAnalyzeRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/academies': {
+      id: '/_authenticated/academies'
+      path: '/academies'
+      fullPath: '/academies'
+      preLoaderRoute: typeof AuthenticatedAcademiesRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
   }
 }
 
 interface AuthenticatedRouteChildren {
+  AuthenticatedAcademiesRoute: typeof AuthenticatedAcademiesRoute
   AuthenticatedAnalyzeRoute: typeof AuthenticatedAnalyzeRoute
   AuthenticatedCoachRoute: typeof AuthenticatedCoachRoute
   AuthenticatedDailyPlanRoute: typeof AuthenticatedDailyPlanRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedEndgameRoute: typeof AuthenticatedEndgameRoute
   AuthenticatedExplorerRoute: typeof AuthenticatedExplorerRoute
+  AuthenticatedMasterclassRoute: typeof AuthenticatedMasterclassRoute
   AuthenticatedMiddlegameRoute: typeof AuthenticatedMiddlegameRoute
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
   AuthenticatedOpeningsRoute: typeof AuthenticatedOpeningsRoute
@@ -354,12 +395,14 @@ interface AuthenticatedRouteChildren {
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedAcademiesRoute: AuthenticatedAcademiesRoute,
   AuthenticatedAnalyzeRoute: AuthenticatedAnalyzeRoute,
   AuthenticatedCoachRoute: AuthenticatedCoachRoute,
   AuthenticatedDailyPlanRoute: AuthenticatedDailyPlanRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedEndgameRoute: AuthenticatedEndgameRoute,
   AuthenticatedExplorerRoute: AuthenticatedExplorerRoute,
+  AuthenticatedMasterclassRoute: AuthenticatedMasterclassRoute,
   AuthenticatedMiddlegameRoute: AuthenticatedMiddlegameRoute,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
   AuthenticatedOpeningsRoute: AuthenticatedOpeningsRoute,
