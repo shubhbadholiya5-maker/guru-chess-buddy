@@ -26,6 +26,7 @@ import { Route as AuthenticatedDashboardRouteImport } from './routes/_authentica
 import { Route as AuthenticatedDailyPlanRouteImport } from './routes/_authenticated/daily-plan'
 import { Route as AuthenticatedCoachRouteImport } from './routes/_authenticated/coach'
 import { Route as AuthenticatedAnalyzeRouteImport } from './routes/_authenticated/analyze'
+import { Route as AuthenticatedAcademiesRouteImport } from './routes/_authenticated/academies'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -112,10 +113,16 @@ const AuthenticatedAnalyzeRoute = AuthenticatedAnalyzeRouteImport.update({
   path: '/analyze',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedAcademiesRoute = AuthenticatedAcademiesRouteImport.update({
+  id: '/academies',
+  path: '/academies',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/academies': typeof AuthenticatedAcademiesRoute
   '/analyze': typeof AuthenticatedAnalyzeRoute
   '/coach': typeof AuthenticatedCoachRoute
   '/daily-plan': typeof AuthenticatedDailyPlanRoute
@@ -134,6 +141,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/academies': typeof AuthenticatedAcademiesRoute
   '/analyze': typeof AuthenticatedAnalyzeRoute
   '/coach': typeof AuthenticatedCoachRoute
   '/daily-plan': typeof AuthenticatedDailyPlanRoute
@@ -154,6 +162,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/auth': typeof AuthRoute
+  '/_authenticated/academies': typeof AuthenticatedAcademiesRoute
   '/_authenticated/analyze': typeof AuthenticatedAnalyzeRoute
   '/_authenticated/coach': typeof AuthenticatedCoachRoute
   '/_authenticated/daily-plan': typeof AuthenticatedDailyPlanRoute
@@ -174,6 +183,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/academies'
     | '/analyze'
     | '/coach'
     | '/daily-plan'
@@ -192,6 +202,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/academies'
     | '/analyze'
     | '/coach'
     | '/daily-plan'
@@ -211,6 +222,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_authenticated'
     | '/auth'
+    | '/_authenticated/academies'
     | '/_authenticated/analyze'
     | '/_authenticated/coach'
     | '/_authenticated/daily-plan'
@@ -354,10 +366,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAnalyzeRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/academies': {
+      id: '/_authenticated/academies'
+      path: '/academies'
+      fullPath: '/academies'
+      preLoaderRoute: typeof AuthenticatedAcademiesRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
   }
 }
 
 interface AuthenticatedRouteChildren {
+  AuthenticatedAcademiesRoute: typeof AuthenticatedAcademiesRoute
   AuthenticatedAnalyzeRoute: typeof AuthenticatedAnalyzeRoute
   AuthenticatedCoachRoute: typeof AuthenticatedCoachRoute
   AuthenticatedDailyPlanRoute: typeof AuthenticatedDailyPlanRoute
@@ -375,6 +395,7 @@ interface AuthenticatedRouteChildren {
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedAcademiesRoute: AuthenticatedAcademiesRoute,
   AuthenticatedAnalyzeRoute: AuthenticatedAnalyzeRoute,
   AuthenticatedCoachRoute: AuthenticatedCoachRoute,
   AuthenticatedDailyPlanRoute: AuthenticatedDailyPlanRoute,
