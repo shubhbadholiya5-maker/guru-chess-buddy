@@ -19,6 +19,7 @@ import { Route as AuthenticatedPlayRouteImport } from './routes/_authenticated/p
 import { Route as AuthenticatedOpeningsRouteImport } from './routes/_authenticated/openings'
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedMiddlegameRouteImport } from './routes/_authenticated/middlegame'
+import { Route as AuthenticatedMasterclassRouteImport } from './routes/_authenticated/masterclass'
 import { Route as AuthenticatedExplorerRouteImport } from './routes/_authenticated/explorer'
 import { Route as AuthenticatedEndgameRouteImport } from './routes/_authenticated/endgame'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
@@ -75,6 +76,12 @@ const AuthenticatedMiddlegameRoute = AuthenticatedMiddlegameRouteImport.update({
   path: '/middlegame',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedMasterclassRoute =
+  AuthenticatedMasterclassRouteImport.update({
+    id: '/masterclass',
+    path: '/masterclass',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedExplorerRoute = AuthenticatedExplorerRouteImport.update({
   id: '/explorer',
   path: '/explorer',
@@ -115,6 +122,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/endgame': typeof AuthenticatedEndgameRoute
   '/explorer': typeof AuthenticatedExplorerRoute
+  '/masterclass': typeof AuthenticatedMasterclassRoute
   '/middlegame': typeof AuthenticatedMiddlegameRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/openings': typeof AuthenticatedOpeningsRoute
@@ -132,6 +140,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/endgame': typeof AuthenticatedEndgameRoute
   '/explorer': typeof AuthenticatedExplorerRoute
+  '/masterclass': typeof AuthenticatedMasterclassRoute
   '/middlegame': typeof AuthenticatedMiddlegameRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
   '/openings': typeof AuthenticatedOpeningsRoute
@@ -151,6 +160,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/endgame': typeof AuthenticatedEndgameRoute
   '/_authenticated/explorer': typeof AuthenticatedExplorerRoute
+  '/_authenticated/masterclass': typeof AuthenticatedMasterclassRoute
   '/_authenticated/middlegame': typeof AuthenticatedMiddlegameRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
   '/_authenticated/openings': typeof AuthenticatedOpeningsRoute
@@ -170,6 +180,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/endgame'
     | '/explorer'
+    | '/masterclass'
     | '/middlegame'
     | '/onboarding'
     | '/openings'
@@ -187,6 +198,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/endgame'
     | '/explorer'
+    | '/masterclass'
     | '/middlegame'
     | '/onboarding'
     | '/openings'
@@ -205,6 +217,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/endgame'
     | '/_authenticated/explorer'
+    | '/_authenticated/masterclass'
     | '/_authenticated/middlegame'
     | '/_authenticated/onboarding'
     | '/_authenticated/openings'
@@ -292,6 +305,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMiddlegameRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/masterclass': {
+      id: '/_authenticated/masterclass'
+      path: '/masterclass'
+      fullPath: '/masterclass'
+      preLoaderRoute: typeof AuthenticatedMasterclassRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/explorer': {
       id: '/_authenticated/explorer'
       path: '/explorer'
@@ -344,6 +364,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedEndgameRoute: typeof AuthenticatedEndgameRoute
   AuthenticatedExplorerRoute: typeof AuthenticatedExplorerRoute
+  AuthenticatedMasterclassRoute: typeof AuthenticatedMasterclassRoute
   AuthenticatedMiddlegameRoute: typeof AuthenticatedMiddlegameRoute
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
   AuthenticatedOpeningsRoute: typeof AuthenticatedOpeningsRoute
@@ -360,6 +381,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedEndgameRoute: AuthenticatedEndgameRoute,
   AuthenticatedExplorerRoute: AuthenticatedExplorerRoute,
+  AuthenticatedMasterclassRoute: AuthenticatedMasterclassRoute,
   AuthenticatedMiddlegameRoute: AuthenticatedMiddlegameRoute,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
   AuthenticatedOpeningsRoute: AuthenticatedOpeningsRoute,
