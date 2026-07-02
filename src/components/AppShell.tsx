@@ -22,11 +22,12 @@ export function AppShell({ children, title }: { children: ReactNode; title?: str
     router.navigate({ to: "/auth", replace: true });
   };
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex relative overflow-hidden gemini-bg">
+      <div className="relative z-10 flex flex-1 min-w-0">
       <aside className="hidden md:flex w-60 flex-col border-r border-border/60 bg-card/40 backdrop-blur">
         <Link to="/dashboard" className="flex items-center gap-2 px-5 py-5 border-b border-border/60">
           <Crown className="h-6 w-6 text-primary" />
-          <span className="font-display text-xl gold-gradient">Chess Trainer</span>
+          <span className="font-display text-xl gold-gradient">Socratic AI Coach</span>
         </Link>
         <nav className="flex-1 p-3 space-y-1">
           {NAV.map((item) => (
@@ -43,16 +44,19 @@ export function AppShell({ children, title }: { children: ReactNode; title?: str
         </nav>
         <button
           onClick={signOut}
-          className="m-3 flex items-center gap-2 px-3 py-2 rounded-md text-sm text-muted-foreground hover:bg-secondary hover:text-foreground"
+          className="mx-3 mt-1 flex items-center gap-2 px-3 py-2 rounded-md text-sm text-muted-foreground hover:bg-secondary hover:text-foreground"
         >
           <LogOut className="h-4 w-4" /> Sign out
         </button>
+        <div className="px-4 py-3 border-t border-border/60 text-[10px] tracking-wide text-center dev-credit">
+          Developed by <span className="font-semibold">Tech Student Shubh Badholiya</span>
+        </div>
       </aside>
       <main className="flex-1 min-w-0">
         <header className="md:hidden flex items-center justify-between px-4 py-3 border-b border-border/60 bg-card/40 backdrop-blur">
           <Link to="/dashboard" className="flex items-center gap-2">
             <Crown className="h-5 w-5 text-primary" />
-            <span className="font-display text-lg gold-gradient">Chess Trainer</span>
+            <span className="font-display text-lg gold-gradient">Socratic AI Coach</span>
           </Link>
           <button onClick={signOut} className="text-xs text-muted-foreground">Sign out</button>
         </header>
@@ -77,6 +81,7 @@ export function AppShell({ children, title }: { children: ReactNode; title?: str
         </nav>
         <div className="h-16 md:hidden" />
       </main>
+      </div>
     </div>
   );
 }
