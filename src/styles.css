@@ -93,3 +93,48 @@
   border: 1px solid oklch(0.82 0.14 85 / 0.18);
   box-shadow: 0 20px 60px -30px oklch(0 0 0 / 0.8), inset 0 1px 0 oklch(1 0 0 / 0.04);
 }
+
+/* Glassmorphism card — 24px rounded, subtle border, backdrop blur */
+.glass-card {
+  background: linear-gradient(180deg, oklch(1 0 0 / 0.04), oklch(1 0 0 / 0.015));
+  border: 1px solid oklch(1 0 0 / 0.08);
+  backdrop-filter: blur(18px) saturate(140%);
+  box-shadow: 0 20px 60px -30px oklch(0 0 0 / 0.8), inset 0 1px 0 oklch(1 0 0 / 0.05);
+}
+
+/* Gemini-style live animated background */
+.gemini-bg::before,
+.gemini-bg::after {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  z-index: 0;
+  pointer-events: none;
+  filter: blur(80px);
+  opacity: 0.55;
+}
+.gemini-bg::before {
+  background:
+    radial-gradient(40% 40% at 20% 30%, oklch(0.45 0.18 265 / 0.9), transparent 70%),
+    radial-gradient(35% 35% at 80% 20%, oklch(0.40 0.22 300 / 0.85), transparent 70%),
+    radial-gradient(45% 45% at 60% 80%, oklch(0.60 0.18 165 / 0.7), transparent 70%);
+  animation: gemini-drift 22s ease-in-out infinite alternate;
+}
+.gemini-bg::after {
+  background:
+    radial-gradient(30% 30% at 70% 40%, oklch(0.55 0.20 220 / 0.55), transparent 70%),
+    radial-gradient(30% 30% at 30% 70%, oklch(0.55 0.22 285 / 0.55), transparent 70%);
+  animation: gemini-drift 30s ease-in-out infinite alternate-reverse;
+}
+@keyframes gemini-drift {
+  0%   { transform: translate3d(0,0,0) scale(1); }
+  50%  { transform: translate3d(4%,-3%,0) scale(1.08); }
+  100% { transform: translate3d(-3%,4%,0) scale(1.04); }
+}
+
+/* Developer credit — subtle glowing tech effect */
+.dev-credit {
+  color: oklch(0.85 0.10 190);
+  text-shadow: 0 0 8px oklch(0.7 0.18 190 / 0.55), 0 0 16px oklch(0.6 0.20 220 / 0.35);
+  letter-spacing: 0.04em;
+}
