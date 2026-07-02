@@ -1,10 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { AppShell } from "@/components/AppShell";
 import { LESSONS, PHASES, BANDS, type Band, type Lang, type Lesson } from "@/lib/masterclass";
 import { speakText } from "@/lib/tts.functions";
-import { Volume2, Loader2, Square } from "lucide-react";
+import { Volume2, Loader2, Square, Radio } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/masterclass")({
@@ -28,9 +28,15 @@ function MasterclassPage() {
 
   return (
     <AppShell title="Masterclass — Thinking Patterns">
-      <p className="text-muted-foreground -mt-2 mb-6 max-w-2xl">
-        How a Grandmaster thinks through each phase of the game. Choose your rating band and language, then listen while you study the board.
-      </p>
+      <div className="flex flex-wrap items-start justify-between gap-4 -mt-2 mb-6">
+        <p className="text-muted-foreground max-w-2xl">
+          How a Grandmaster thinks through each phase of the game. Choose your rating band and language, then listen while you study the board.
+        </p>
+        <Link to="/live-talk"
+          className="shrink-0 inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary/15 text-primary border border-primary/30 hover:bg-primary/25 text-sm">
+          <Radio className="h-4 w-4" /> Launch Live Talk
+        </Link>
+      </div>
 
       <div className="flex flex-wrap gap-3 mb-8">
         <div className="flex gap-1 p-1 rounded-lg bg-card/50 border border-border/60">
