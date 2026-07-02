@@ -81,6 +81,7 @@ export function AppShell({ children, title }: { children: ReactNode; title?: str
         </nav>
         <div className="h-16 md:hidden" />
       </main>
+      </div>
     </div>
   );
 }
