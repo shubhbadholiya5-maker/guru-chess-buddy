@@ -1,12 +1,14 @@
 import { Link, useRouter } from "@tanstack/react-router";
-import { Crown, LayoutDashboard, CalendarCheck, Swords, MessageSquare, GraduationCap, Compass, FileSearch, Sparkles, LogOut } from "lucide-react";
+import { Crown, LayoutDashboard, CalendarCheck, Swords, MessageSquare, GraduationCap, Compass, FileSearch, Sparkles, Radio, LogOut } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import type { ReactNode } from "react";
+import { AvatarProvider } from "@/components/AvatarProvider";
 
 const NAV = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { to: "/daily-plan", label: "Daily Plan", icon: CalendarCheck },
   { to: "/coach", label: "Coach", icon: MessageSquare },
+  { to: "/live-talk", label: "Live Talk", icon: Radio },
   { to: "/academies", label: "Academies", icon: GraduationCap },
   { to: "/explorer", label: "Explorer", icon: Compass },
   { to: "/analyze", label: "Analyze", icon: FileSearch },
@@ -22,6 +24,7 @@ export function AppShell({ children, title }: { children: ReactNode; title?: str
     router.navigate({ to: "/auth", replace: true });
   };
   return (
+    <AvatarProvider>
     <div className="min-h-screen flex relative overflow-hidden gemini-bg">
       <div className="relative z-10 flex flex-1 min-w-0">
       <aside className="hidden md:flex w-60 flex-col border-r border-border/60 bg-card/40 backdrop-blur">
@@ -83,5 +86,6 @@ export function AppShell({ children, title }: { children: ReactNode; title?: str
       </main>
       </div>
     </div>
+    </AvatarProvider>
   );
 }

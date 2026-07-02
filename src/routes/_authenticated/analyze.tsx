@@ -1,9 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import ReactMarkdown from "react-markdown";
 import { AppShell } from "@/components/AppShell";
 import { analyzePgn, analyzeBatchPgns } from "@/lib/coach.functions";
+import { Radio } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/analyze")({
@@ -28,9 +29,15 @@ function AnalyzePage() {
 
   return (
     <AppShell title="Game Analysis">
-      <div className="flex gap-1 p-1 rounded-lg bg-card/50 border border-border/60 w-fit mb-6">
-        <button onClick={() => setMode("single")} className={`px-4 py-1.5 text-sm rounded-md ${mode === "single" ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}>Single Game</button>
-        <button onClick={() => setMode("batch")} className={`px-4 py-1.5 text-sm rounded-md ${mode === "batch" ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}>Recurring Patterns (up to 20)</button>
+      <div className="flex flex-wrap items-center gap-3 mb-6">
+        <div className="flex gap-1 p-1 rounded-lg bg-card/50 border border-border/60 w-fit">
+          <button onClick={() => setMode("single")} className={`px-4 py-1.5 text-sm rounded-md ${mode === "single" ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}>Single Game</button>
+          <button onClick={() => setMode("batch")} className={`px-4 py-1.5 text-sm rounded-md ${mode === "batch" ? "bg-primary text-primary-foreground" : "text-muted-foreground"}`}>Recurring Patterns (up to 20)</button>
+        </div>
+        <Link to="/live-talk"
+          className="ml-auto inline-flex items-center gap-2 px-3 py-2 rounded-lg bg-primary/15 text-primary border border-primary/30 hover:bg-primary/25 text-sm">
+          <Radio className="h-4 w-4" /> Live Talk Examples
+        </Link>
       </div>
 
       {mode === "single" ? <SingleMode /> : <BatchMode />}
