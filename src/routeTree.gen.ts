@@ -20,6 +20,8 @@ import { Route as AuthenticatedOpeningsRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authenticated/onboarding'
 import { Route as AuthenticatedMiddlegameRouteImport } from './routes/_authenticated/middlegame'
 import { Route as AuthenticatedMasterclassRouteImport } from './routes/_authenticated/masterclass'
+import { Route as AuthenticatedLiveTalkRouteImport } from './routes/_authenticated/live-talk'
+import { Route as AuthenticatedLiveTalkRouteImport } from './routes/_authenticated/live-talk'
 import { Route as AuthenticatedExplorerRouteImport } from './routes/_authenticated/explorer'
 import { Route as AuthenticatedEndgameRouteImport } from './routes/_authenticated/endgame'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
@@ -83,6 +85,16 @@ const AuthenticatedMasterclassRoute =
     path: '/masterclass',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
+const AuthenticatedLiveTalkRoute = AuthenticatedLiveTalkRouteImport.update({
+  id: '/live-talk',
+  path: '/live-talk',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedLiveTalkRoute = AuthenticatedLiveTalkRouteImport.update({
+  id: '/live-talk',
+  path: '/live-talk',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedExplorerRoute = AuthenticatedExplorerRouteImport.update({
   id: '/explorer',
   path: '/explorer',
@@ -129,6 +141,8 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/endgame': typeof AuthenticatedEndgameRoute
   '/explorer': typeof AuthenticatedExplorerRoute
+  '/live-talk': typeof AuthenticatedLiveTalkRoute
+  '/live-talk': typeof AuthenticatedLiveTalkRoute
   '/masterclass': typeof AuthenticatedMasterclassRoute
   '/middlegame': typeof AuthenticatedMiddlegameRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
@@ -148,6 +162,8 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/endgame': typeof AuthenticatedEndgameRoute
   '/explorer': typeof AuthenticatedExplorerRoute
+  '/live-talk': typeof AuthenticatedLiveTalkRoute
+  '/live-talk': typeof AuthenticatedLiveTalkRoute
   '/masterclass': typeof AuthenticatedMasterclassRoute
   '/middlegame': typeof AuthenticatedMiddlegameRoute
   '/onboarding': typeof AuthenticatedOnboardingRoute
@@ -169,6 +185,8 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/endgame': typeof AuthenticatedEndgameRoute
   '/_authenticated/explorer': typeof AuthenticatedExplorerRoute
+  '/_authenticated/live-talk': typeof AuthenticatedLiveTalkRoute
+  '/_authenticated/live-talk': typeof AuthenticatedLiveTalkRoute
   '/_authenticated/masterclass': typeof AuthenticatedMasterclassRoute
   '/_authenticated/middlegame': typeof AuthenticatedMiddlegameRoute
   '/_authenticated/onboarding': typeof AuthenticatedOnboardingRoute
@@ -190,6 +208,9 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/endgame'
     | '/explorer'
+    | '/live-talk'
+    | '/live-talk'
+    | '/live-talk'
     | '/masterclass'
     | '/middlegame'
     | '/onboarding'
@@ -209,6 +230,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/endgame'
     | '/explorer'
+    | '/live-talk'
     | '/masterclass'
     | '/middlegame'
     | '/onboarding'
@@ -229,6 +251,8 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/endgame'
     | '/_authenticated/explorer'
+    | '/_authenticated/live-talk'
+    | '/_authenticated/live-talk'
     | '/_authenticated/masterclass'
     | '/_authenticated/middlegame'
     | '/_authenticated/onboarding'
@@ -324,6 +348,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedMasterclassRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/live-talk': {
+      id: '/_authenticated/live-talk'
+      path: '/live-talk'
+      fullPath: '/live-talk'
+      preLoaderRoute: typeof AuthenticatedLiveTalkRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/live-talk': {
+      id: '/_authenticated/live-talk'
+      path: '/live-talk'
+      fullPath: '/live-talk'
+      preLoaderRoute: typeof AuthenticatedLiveTalkRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/explorer': {
       id: '/_authenticated/explorer'
       path: '/explorer'
@@ -384,6 +422,8 @@ interface AuthenticatedRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedEndgameRoute: typeof AuthenticatedEndgameRoute
   AuthenticatedExplorerRoute: typeof AuthenticatedExplorerRoute
+  AuthenticatedLiveTalkRoute: typeof AuthenticatedLiveTalkRoute
+  AuthenticatedLiveTalkRoute: typeof AuthenticatedLiveTalkRoute
   AuthenticatedMasterclassRoute: typeof AuthenticatedMasterclassRoute
   AuthenticatedMiddlegameRoute: typeof AuthenticatedMiddlegameRoute
   AuthenticatedOnboardingRoute: typeof AuthenticatedOnboardingRoute
@@ -402,6 +442,8 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedEndgameRoute: AuthenticatedEndgameRoute,
   AuthenticatedExplorerRoute: AuthenticatedExplorerRoute,
+  AuthenticatedLiveTalkRoute: AuthenticatedLiveTalkRoute,
+  AuthenticatedLiveTalkRoute: AuthenticatedLiveTalkRoute,
   AuthenticatedMasterclassRoute: AuthenticatedMasterclassRoute,
   AuthenticatedMiddlegameRoute: AuthenticatedMiddlegameRoute,
   AuthenticatedOnboardingRoute: AuthenticatedOnboardingRoute,
