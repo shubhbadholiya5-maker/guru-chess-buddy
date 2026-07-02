@@ -22,7 +22,8 @@ export function AppShell({ children, title }: { children: ReactNode; title?: str
     router.navigate({ to: "/auth", replace: true });
   };
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex relative overflow-hidden gemini-bg">
+      <div className="relative z-10 flex flex-1 min-w-0">
       <aside className="hidden md:flex w-60 flex-col border-r border-border/60 bg-card/40 backdrop-blur">
         <Link to="/dashboard" className="flex items-center gap-2 px-5 py-5 border-b border-border/60">
           <Crown className="h-6 w-6 text-primary" />
