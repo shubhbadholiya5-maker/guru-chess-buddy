@@ -186,6 +186,12 @@ function GMCoachPage() {
             {voiceOut ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
             {voiceOut ? "Voice on" : "Voice off"}
           </button>
+          <button
+            onClick={clearChat}
+            className="w-full py-2.5 rounded-xl border border-destructive/50 text-destructive flex items-center justify-center gap-2 hover:bg-destructive/10"
+          >
+            <Trash2 className="h-4 w-4" /> Clear chat history
+          </button>
           <div className="card-elevated rounded-2xl p-4 text-xs text-muted-foreground space-y-2">
             <div className="text-foreground font-semibold text-sm">Try:</div>
             <button onClick={() => send("Teach me the Italian Game main line with concrete moves.")} className="block w-full text-left hover:text-foreground">→ Teach me the Italian Game</button>
