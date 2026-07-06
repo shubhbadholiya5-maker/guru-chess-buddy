@@ -8,7 +8,7 @@ import { speakText } from "@/lib/tts.functions";
 import { supabase } from "@/integrations/supabase/client";
 import { listen, stopSpeaking, type Lang } from "@/lib/voice";
 import { MiniPgnBoard, parseChatContent } from "@/components/MiniPgnBoard";
-import { Mic, Square, Volume2, VolumeX, Send, Crown } from "lucide-react";
+import { Mic, Square, Volume2, VolumeX, Send, Crown, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_authenticated/gm-coach")({
@@ -24,6 +24,7 @@ function GMCoachPage() {
   const [messages, setMessages] = useState<Msg[]>([
     { role: "assistant", content: "Lock in. Aap 2000 Elo ki taraf jaa rahe ho. Share a **FEN**, paste a PGN like `1. e4 e5 2. Nf3 Nc6 3. Bb5`, ya seedha puchho — kya seekhna hai aaj?" },
   ]);
+  const [userId, setUserId] = useState<string | null>(null);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const [lang, setLang] = useState<Lang>("hinglish");
@@ -36,10 +37,29 @@ function GMCoachPage() {
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data }) => {
       if (!data.user) return;
+      setUserId(data.user.id);
       const { data: p } = await supabase.from("profiles").select("language").eq("id", data.user.id).maybeSingle();
       if (p?.language) setLang(p.language as Lang);
+      const { data: hist } = await supabase
+        .from("coach_messages")
+        .select("role, content, created_at")
+        .eq("user_id", data.user.id)
+        .order("created_at", { ascending: true })
+        .limit(100);
+      if (hist && hist.length > 0) {
+        setMessages(hist.map((m) => ({ role: m.role as "user" | "assistant", content: m.content })));
+      }
     });
   }, []);
+
+  const clearChat = async () => {
+    if (!userId) return;
+    if (!confirm("Clear the entire conversation? This cannot be undone.")) return;
+    const { error } = await supabase.from("coach_messages").delete().eq("user_id", userId);
+    if (error) { toast.error(error.message); return; }
+    setMessages([{ role: "assistant", content: "Fresh start. What are we working on?" }]);
+    toast.success("Chat cleared");
+  };
 
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages, loading]);
 
@@ -165,6 +185,12 @@ function GMCoachPage() {
           >
             {voiceOut ? <Volume2 className="h-4 w-4" /> : <VolumeX className="h-4 w-4" />}
             {voiceOut ? "Voice on" : "Voice off"}
+          </button>
+          <button
+            onClick={clearChat}
+            className="w-full py-2.5 rounded-xl border border-destructive/50 text-destructive flex items-center justify-center gap-2 hover:bg-destructive/10"
+          >
+            <Trash2 className="h-4 w-4" /> Clear chat history
           </button>
           <div className="card-elevated rounded-2xl p-4 text-xs text-muted-foreground space-y-2">
             <div className="text-foreground font-semibold text-sm">Try:</div>

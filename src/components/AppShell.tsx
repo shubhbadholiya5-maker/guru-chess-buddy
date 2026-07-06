@@ -3,6 +3,7 @@ import { Crown, LayoutDashboard, CalendarCheck, Swords, MessageSquare, Graduatio
 import { supabase } from "@/integrations/supabase/client";
 import type { ReactNode } from "react";
 import { AvatarProvider } from "@/components/AvatarProvider";
+import { GlobalChatWidget } from "@/components/GlobalChatWidget";
 
 const NAV = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -86,6 +87,7 @@ export function AppShell({ children, title }: { children: ReactNode; title?: str
         <div className="h-16 md:hidden" />
       </main>
       </div>
+      <GlobalChatWidget />
     </div>
     </AvatarProvider>
   );
