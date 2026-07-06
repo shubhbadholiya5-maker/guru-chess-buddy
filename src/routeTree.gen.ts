@@ -21,6 +21,7 @@ import { Route as AuthenticatedOnboardingRouteImport } from './routes/_authentic
 import { Route as AuthenticatedMiddlegameRouteImport } from './routes/_authenticated/middlegame'
 import { Route as AuthenticatedMasterclassRouteImport } from './routes/_authenticated/masterclass'
 import { Route as AuthenticatedLiveTalkRouteImport } from './routes/_authenticated/live-talk'
+import { Route as AuthenticatedGmCoachRouteImport } from './routes/_authenticated/gm-coach'
 import { Route as AuthenticatedExplorerRouteImport } from './routes/_authenticated/explorer'
 import { Route as AuthenticatedEndgameRouteImport } from './routes/_authenticated/endgame'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
@@ -89,6 +90,11 @@ const AuthenticatedLiveTalkRoute = AuthenticatedLiveTalkRouteImport.update({
   path: '/live-talk',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedGmCoachRoute = AuthenticatedGmCoachRouteImport.update({
+  id: '/gm-coach',
+  path: '/gm-coach',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedExplorerRoute = AuthenticatedExplorerRouteImport.update({
   id: '/explorer',
   path: '/explorer',
@@ -135,6 +141,7 @@ export interface FileRoutesByFullPath {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/endgame': typeof AuthenticatedEndgameRoute
   '/explorer': typeof AuthenticatedExplorerRoute
+  '/gm-coach': typeof AuthenticatedGmCoachRoute
   '/live-talk': typeof AuthenticatedLiveTalkRoute
   '/masterclass': typeof AuthenticatedMasterclassRoute
   '/middlegame': typeof AuthenticatedMiddlegameRoute
@@ -155,6 +162,7 @@ export interface FileRoutesByTo {
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/endgame': typeof AuthenticatedEndgameRoute
   '/explorer': typeof AuthenticatedExplorerRoute
+  '/gm-coach': typeof AuthenticatedGmCoachRoute
   '/live-talk': typeof AuthenticatedLiveTalkRoute
   '/masterclass': typeof AuthenticatedMasterclassRoute
   '/middlegame': typeof AuthenticatedMiddlegameRoute
@@ -177,6 +185,7 @@ export interface FileRoutesById {
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/endgame': typeof AuthenticatedEndgameRoute
   '/_authenticated/explorer': typeof AuthenticatedExplorerRoute
+  '/_authenticated/gm-coach': typeof AuthenticatedGmCoachRoute
   '/_authenticated/live-talk': typeof AuthenticatedLiveTalkRoute
   '/_authenticated/masterclass': typeof AuthenticatedMasterclassRoute
   '/_authenticated/middlegame': typeof AuthenticatedMiddlegameRoute
@@ -199,6 +208,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/endgame'
     | '/explorer'
+    | '/gm-coach'
     | '/live-talk'
     | '/masterclass'
     | '/middlegame'
@@ -219,6 +229,7 @@ export interface FileRouteTypes {
     | '/dashboard'
     | '/endgame'
     | '/explorer'
+    | '/gm-coach'
     | '/live-talk'
     | '/masterclass'
     | '/middlegame'
@@ -240,6 +251,7 @@ export interface FileRouteTypes {
     | '/_authenticated/dashboard'
     | '/_authenticated/endgame'
     | '/_authenticated/explorer'
+    | '/_authenticated/gm-coach'
     | '/_authenticated/live-talk'
     | '/_authenticated/masterclass'
     | '/_authenticated/middlegame'
@@ -343,6 +355,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedLiveTalkRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/gm-coach': {
+      id: '/_authenticated/gm-coach'
+      path: '/gm-coach'
+      fullPath: '/gm-coach'
+      preLoaderRoute: typeof AuthenticatedGmCoachRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/explorer': {
       id: '/_authenticated/explorer'
       path: '/explorer'
@@ -403,6 +422,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedEndgameRoute: typeof AuthenticatedEndgameRoute
   AuthenticatedExplorerRoute: typeof AuthenticatedExplorerRoute
+  AuthenticatedGmCoachRoute: typeof AuthenticatedGmCoachRoute
   AuthenticatedLiveTalkRoute: typeof AuthenticatedLiveTalkRoute
   AuthenticatedMasterclassRoute: typeof AuthenticatedMasterclassRoute
   AuthenticatedMiddlegameRoute: typeof AuthenticatedMiddlegameRoute
@@ -422,6 +442,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedEndgameRoute: AuthenticatedEndgameRoute,
   AuthenticatedExplorerRoute: AuthenticatedExplorerRoute,
+  AuthenticatedGmCoachRoute: AuthenticatedGmCoachRoute,
   AuthenticatedLiveTalkRoute: AuthenticatedLiveTalkRoute,
   AuthenticatedMasterclassRoute: AuthenticatedMasterclassRoute,
   AuthenticatedMiddlegameRoute: AuthenticatedMiddlegameRoute,
