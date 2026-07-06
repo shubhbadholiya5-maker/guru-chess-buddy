@@ -1,11 +1,12 @@
 import { Link, useRouter } from "@tanstack/react-router";
-import { Crown, LayoutDashboard, CalendarCheck, Swords, MessageSquare, GraduationCap, Compass, FileSearch, Sparkles, Radio, LogOut } from "lucide-react";
+import { Crown, LayoutDashboard, CalendarCheck, Swords, MessageSquare, GraduationCap, Compass, FileSearch, Sparkles, Radio, LogOut, Bot } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import type { ReactNode } from "react";
 import { AvatarProvider } from "@/components/AvatarProvider";
 
 const NAV = [
   { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { to: "/gm-coach", label: "GM Coach", icon: Bot },
   { to: "/daily-plan", label: "Daily Plan", icon: CalendarCheck },
   { to: "/coach", label: "Coach", icon: MessageSquare },
   { to: "/live-talk", label: "Live Talk", icon: Radio },
