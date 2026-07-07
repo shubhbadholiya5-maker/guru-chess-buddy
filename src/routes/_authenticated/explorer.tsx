@@ -6,6 +6,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { AppShell } from "@/components/AppShell";
 import { fetchLichessPuzzle, fetchOpeningExplorer, type LichessPuzzle, type ExplorerResult } from "@/lib/lichess.functions";
 import { speak, stopSpeaking, type Lang } from "@/lib/voice";
+import { useAvatar } from "@/components/AvatarProvider";
 import { toast } from "sonner";
 import { Volume2, VolumeX, RotateCcw, ChevronRight, Sparkles, BookOpen, Target, Swords } from "lucide-react";
 
@@ -76,6 +77,7 @@ function ExplorerPage() {
 
 function PuzzlesPanel({ lang, voiceOut }: { lang: Lang; voiceOut: boolean }) {
   const fetchPuzzle = useServerFn(fetchLichessPuzzle);
+  const { hint } = useAvatar();
   const [diff, setDiff] = useState(2);
   const [theme, setTheme] = useState("mix");
   const [puzzle, setPuzzle] = useState<LichessPuzzle | null>(null);
@@ -85,7 +87,15 @@ function PuzzlesPanel({ lang, voiceOut }: { lang: Lang; voiceOut: boolean }) {
   const [status, setStatus] = useState("");
   const [boardSize, setBoardSize] = useState(360);
   const [orientation, setOrientation] = useState<"white" | "black">("white");
+  const [flash, setFlash] = useState<{ from?: string; to: string; kind: "good" | "bad" } | null>(null);
+  const flashTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const doFlash = (kind: "good" | "bad", to: string, from?: string) => {
+    if (flashTimer.current) clearTimeout(flashTimer.current);
+    setFlash({ kind, to, from });
+    flashTimer.current = setTimeout(() => setFlash(null), 900);
+  };
 
   useEffect(() => {
     const calc = () => {
@@ -125,6 +135,17 @@ function PuzzlesPanel({ lang, voiceOut }: { lang: Lang; voiceOut: boolean }) {
 
   useEffect(() => { loadNew(); /* eslint-disable-next-line */ }, []);
 
+  const wrongHint = (): string => {
+    const pool = [
+      "Wrong square! Look for **checks, captures, and threats** first.",
+      "Not quite — kaunsa piece opponent ke king ke sabse paas hai?",
+      "Try again. Search for a **forcing move** before a quiet one.",
+      "Not the top line. Kis square par tumhare pieces converge kar rahe hain?",
+      "Nope — think about undefended enemy pieces (LPDO: loose pieces drop off).",
+    ];
+    return pool[Math.floor(Math.random() * pool.length)];
+  };
+
   const tryMove = (from: string, to: string, promo?: string): boolean => {
     if (!puzzle || !game) return false;
     const expected = puzzle.solutionUci[step];
@@ -133,10 +154,13 @@ function PuzzlesPanel({ lang, voiceOut }: { lang: Lang; voiceOut: boolean }) {
     const expTo = expected.slice(2, 4);
     const expPromo = expected.length > 4 ? expected[4] : undefined;
     if (from !== expFrom || to !== expTo || (expPromo && promo !== expPromo)) {
-      setStatus("❌ Not the engine's top line. Think about checks, captures, threats. Try again.");
+      doFlash("bad", to, from);
+      setStatus("❌ Not the engine's top line. Think checks, captures, threats.");
+      hint(wrongHint());
       if (voiceOut) speak("Not quite. Reconsider checks, captures, and threats.", lang);
       return false;
     }
+    doFlash("good", to, from);
     const g = new Chess(game.fen());
     g.move({ from, to, promotion: promo });
     setGame(g);
@@ -151,6 +175,7 @@ function PuzzlesPanel({ lang, voiceOut }: { lang: Lang; voiceOut: boolean }) {
     setStep(nextStep);
     if (nextStep >= puzzle.solutionUci.length) {
       setStatus("✅ **Solved!** Brilliant — that's grandmaster-level calculation.");
+      hint("Solved! Move to the next puzzle.");
       if (voiceOut) speak("Solved. Brilliant calculation.", lang);
     } else {
       setStatus("✅ Correct! Keep going — find the next best move.");
@@ -158,6 +183,18 @@ function PuzzlesPanel({ lang, voiceOut }: { lang: Lang; voiceOut: boolean }) {
     }
     return true;
   };
+
+  const squareStyles = useMemo(() => {
+    if (!flash) return {};
+    const color = flash.kind === "good"
+      ? "rgba(34,197,94,0.55)"
+      : "rgba(239,68,68,0.65)";
+    const styles: Record<string, React.CSSProperties> = {
+      [flash.to]: { background: color, boxShadow: `inset 0 0 0 3px ${color}` },
+    };
+    if (flash.from) styles[flash.from] = { background: "rgba(234,179,8,0.35)" };
+    return styles;
+  }, [flash]);
 
   const pgn = useMemo(() => {
     if (!puzzle || !game) return "";
@@ -196,6 +233,7 @@ function PuzzlesPanel({ lang, voiceOut }: { lang: Lang; voiceOut: boolean }) {
               position={game.fen()}
               boardWidth={boardSize}
               boardOrientation={orientation}
+              customSquareStyles={squareStyles}
               onPieceDrop={(source: string, target: string) => tryMove(source, target, "q")}
             />
           )}
