@@ -115,6 +115,21 @@ function LessonCard({ lesson, lang }: { lesson: Lesson; lang: Lang }) {
           </li>
         ))}
       </ul>
+
+      <div className="mt-4">
+        <div className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1.5">
+          Live example · {LESSON_EXAMPLES[lesson.phase].title}
+        </div>
+        <MiniAutoBoard
+          fen={LESSON_EXAMPLES[lesson.phase].fen}
+          moves={LESSON_EXAMPLES[lesson.phase].moves}
+          captions={LESSON_EXAMPLES[lesson.phase].captions}
+          intro={LESSON_EXAMPLES[lesson.phase].intro}
+          size={240}
+          speedMs={1200}
+          autoStart={false}
+        />
+      </div>
     </article>
   );
 }
