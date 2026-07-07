@@ -3,6 +3,8 @@ import { useMemo, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import { AppShell } from "@/components/AppShell";
 import { LESSONS, PHASES, BANDS, type Band, type Lang, type Lesson } from "@/lib/masterclass";
+import { LESSON_EXAMPLES } from "@/lib/masterclass-examples";
+import { MiniAutoBoard } from "@/components/MiniAutoBoard";
 import { speakText } from "@/lib/tts.functions";
 import { Volume2, Loader2, Square, Radio } from "lucide-react";
 import { toast } from "sonner";
