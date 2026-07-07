@@ -135,6 +135,17 @@ function PuzzlesPanel({ lang, voiceOut }: { lang: Lang; voiceOut: boolean }) {
 
   useEffect(() => { loadNew(); /* eslint-disable-next-line */ }, []);
 
+  const wrongHint = (): string => {
+    const pool = [
+      "Wrong square! Look for **checks, captures, and threats** first.",
+      "Not quite — kaunsa piece opponent ke king ke sabse paas hai?",
+      "Try again. Search for a **forcing move** before a quiet one.",
+      "Not the top line. Kis square par tumhare pieces converge kar rahe hain?",
+      "Nope — think about undefended enemy pieces (LPDO: loose pieces drop off).",
+    ];
+    return pool[Math.floor(Math.random() * pool.length)];
+  };
+
   const tryMove = (from: string, to: string, promo?: string): boolean => {
     if (!puzzle || !game) return false;
     const expected = puzzle.solutionUci[step];
@@ -143,10 +154,13 @@ function PuzzlesPanel({ lang, voiceOut }: { lang: Lang; voiceOut: boolean }) {
     const expTo = expected.slice(2, 4);
     const expPromo = expected.length > 4 ? expected[4] : undefined;
     if (from !== expFrom || to !== expTo || (expPromo && promo !== expPromo)) {
-      setStatus("❌ Not the engine's top line. Think about checks, captures, threats. Try again.");
+      doFlash("bad", to, from);
+      setStatus("❌ Not the engine's top line. Think checks, captures, threats.");
+      hint(wrongHint());
       if (voiceOut) speak("Not quite. Reconsider checks, captures, and threats.", lang);
       return false;
     }
+    doFlash("good", to, from);
     const g = new Chess(game.fen());
     g.move({ from, to, promotion: promo });
     setGame(g);
@@ -161,6 +175,7 @@ function PuzzlesPanel({ lang, voiceOut }: { lang: Lang; voiceOut: boolean }) {
     setStep(nextStep);
     if (nextStep >= puzzle.solutionUci.length) {
       setStatus("✅ **Solved!** Brilliant — that's grandmaster-level calculation.");
+      hint("Solved! Move to the next puzzle.");
       if (voiceOut) speak("Solved. Brilliant calculation.", lang);
     } else {
       setStatus("✅ Correct! Keep going — find the next best move.");
@@ -168,6 +183,18 @@ function PuzzlesPanel({ lang, voiceOut }: { lang: Lang; voiceOut: boolean }) {
     }
     return true;
   };
+
+  const squareStyles = useMemo(() => {
+    if (!flash) return {};
+    const color = flash.kind === "good"
+      ? "rgba(34,197,94,0.55)"
+      : "rgba(239,68,68,0.65)";
+    const styles: Record<string, React.CSSProperties> = {
+      [flash.to]: { background: color, boxShadow: `inset 0 0 0 3px ${color}` },
+    };
+    if (flash.from) styles[flash.from] = { background: "rgba(234,179,8,0.35)" };
+    return styles;
+  }, [flash]);
 
   const pgn = useMemo(() => {
     if (!puzzle || !game) return "";
