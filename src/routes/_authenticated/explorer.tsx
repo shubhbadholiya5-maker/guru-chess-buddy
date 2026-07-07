@@ -6,6 +6,7 @@ import { useServerFn } from "@tanstack/react-start";
 import { AppShell } from "@/components/AppShell";
 import { fetchLichessPuzzle, fetchOpeningExplorer, type LichessPuzzle, type ExplorerResult } from "@/lib/lichess.functions";
 import { speak, stopSpeaking, type Lang } from "@/lib/voice";
+import { useAvatar } from "@/components/AvatarProvider";
 import { toast } from "sonner";
 import { Volume2, VolumeX, RotateCcw, ChevronRight, Sparkles, BookOpen, Target, Swords } from "lucide-react";
 
