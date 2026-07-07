@@ -94,28 +94,42 @@ export const fetchOpeningExplorer = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const base = data.db === "lichess" ? "https://explorer.lichess.ovh/lichess" : "https://explorer.lichess.ovh/masters";
     const params = new URLSearchParams({ fen: data.fen, moves: "12", topGames: "0" });
-    const res = await fetch(`${base}?${params.toString()}`, { headers: { Accept: "application/json" } });
-    if (!res.ok) throw new Error(`Explorer error ${res.status}`);
-    const j: any = await res.json();
-    const total = (j.white ?? 0) + (j.draws ?? 0) + (j.black ?? 0);
-    const moves: ExplorerMove[] = (j.moves ?? []).map((m: any) => {
-      const t = (m.white ?? 0) + (m.draws ?? 0) + (m.black ?? 0);
+    const empty: ExplorerResult = { white: 0, draws: 0, black: 0, total: 0, moves: [], opening: null };
+    try {
+      const res = await fetch(`${base}?${params.toString()}`, {
+        headers: {
+          Accept: "application/json",
+          "User-Agent": "SocraticAIChessCoach/1.0 (contact: support@lovable.app)",
+        },
+      });
+      if (!res.ok) {
+        console.warn(`[explorer] ${res.status} ${res.statusText}`);
+        return empty;
+      }
+      const j: any = await res.json();
+      const total = (j.white ?? 0) + (j.draws ?? 0) + (j.black ?? 0);
+      const moves: ExplorerMove[] = (j.moves ?? []).map((m: any) => {
+        const t = (m.white ?? 0) + (m.draws ?? 0) + (m.black ?? 0);
+        return {
+          uci: String(m.uci),
+          san: String(m.san),
+          white: m.white ?? 0,
+          draws: m.draws ?? 0,
+          black: m.black ?? 0,
+          total: t,
+          averageRating: m.averageRating,
+        };
+      });
       return {
-        uci: String(m.uci),
-        san: String(m.san),
-        white: m.white ?? 0,
-        draws: m.draws ?? 0,
-        black: m.black ?? 0,
-        total: t,
-        averageRating: m.averageRating,
-      };
-    });
-    return {
-      white: j.white ?? 0,
-      draws: j.draws ?? 0,
-      black: j.black ?? 0,
-      total,
-      moves,
-      opening: j.opening ?? null,
-    } satisfies ExplorerResult;
+        white: j.white ?? 0,
+        draws: j.draws ?? 0,
+        black: j.black ?? 0,
+        total,
+        moves,
+        opening: j.opening ?? null,
+      } satisfies ExplorerResult;
+    } catch (e) {
+      console.warn("[explorer] fetch failed", e);
+      return empty;
+    }
   });
