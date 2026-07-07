@@ -61,35 +61,39 @@ function SingleMode() {
   };
 
   return (
-    <div className="grid md:grid-cols-2 gap-6">
-      <div className="card-elevated rounded-2xl p-5 space-y-3">
-        <div className="text-sm text-muted-foreground">Paste one PGN. Guru will review like a coach — not an engine dump.</div>
-        <textarea value={pgn} onChange={(e) => setPgn(e.target.value)}
-          placeholder="[Event ...] 1. e4 e5 ..."
-          className="w-full h-72 p-3 rounded-md bg-input border border-border font-mono text-xs" />
-        <div className="flex gap-2">
-          <button onClick={() => setPgn(SAMPLE)} className="px-3 py-2 text-sm rounded-md border border-border">Load sample</button>
-          <button onClick={run} disabled={loading} className="flex-1 py-2.5 rounded-md bg-primary text-primary-foreground font-medium disabled:opacity-60">
-            {loading ? "Analyzing…" : "Analyze with Guru"}
-          </button>
+    <div className="space-y-6">
+      <div className="grid md:grid-cols-2 gap-6">
+        <div className="card-elevated rounded-2xl p-5 space-y-3">
+          <div className="text-sm text-muted-foreground">Paste one PGN. Guru will review like a coach — not an engine dump.</div>
+          <textarea value={pgn} onChange={(e) => setPgn(e.target.value)}
+            placeholder="[Event ...] 1. e4 e5 ..."
+            className="w-full h-72 p-3 rounded-md bg-input border border-border font-mono text-xs" />
+          <div className="flex gap-2">
+            <button onClick={() => setPgn(SAMPLE)} className="px-3 py-2 text-sm rounded-md border border-border">Load sample</button>
+            <button onClick={run} disabled={loading} className="flex-1 py-2.5 rounded-md bg-primary text-primary-foreground font-medium disabled:opacity-60">
+              {loading ? "Analyzing…" : "Analyze with Guru"}
+            </button>
+          </div>
+        </div>
+
+        <div className="card-elevated rounded-2xl p-5 min-h-72">
+          {!result && !loading && <div className="text-muted-foreground text-sm">Your coach review will appear here.</div>}
+          {loading && <div className="text-muted-foreground text-sm italic">Reviewing the game…</div>}
+          {result && (
+            <>
+              <div className="flex gap-3 mb-4">
+                <div className="px-3 py-1 rounded-full bg-secondary text-xs">Blunders: {result.blunders}</div>
+                <div className="px-3 py-1 rounded-full bg-secondary text-xs">Mistakes: {result.mistakes}</div>
+              </div>
+              <div className="prose prose-sm prose-invert max-w-none">
+                <ReactMarkdown>{result.summary}</ReactMarkdown>
+              </div>
+            </>
+          )}
         </div>
       </div>
 
-      <div className="card-elevated rounded-2xl p-5 min-h-72">
-        {!result && !loading && <div className="text-muted-foreground text-sm">Your coach review will appear here.</div>}
-        {loading && <div className="text-muted-foreground text-sm italic">Reviewing the game…</div>}
-        {result && (
-          <>
-            <div className="flex gap-3 mb-4">
-              <div className="px-3 py-1 rounded-full bg-secondary text-xs">Blunders: {result.blunders}</div>
-              <div className="px-3 py-1 rounded-full bg-secondary text-xs">Mistakes: {result.mistakes}</div>
-            </div>
-            <div className="prose prose-sm prose-invert max-w-none">
-              <ReactMarkdown>{result.summary}</ReactMarkdown>
-            </div>
-          </>
-        )}
-      </div>
+      {pgn.trim().length > 20 && <DeepAnalysis pgn={pgn} />}
     </div>
   );
 }
