@@ -77,6 +77,7 @@ function ExplorerPage() {
 
 function PuzzlesPanel({ lang, voiceOut }: { lang: Lang; voiceOut: boolean }) {
   const fetchPuzzle = useServerFn(fetchLichessPuzzle);
+  const { hint } = useAvatar();
   const [diff, setDiff] = useState(2);
   const [theme, setTheme] = useState("mix");
   const [puzzle, setPuzzle] = useState<LichessPuzzle | null>(null);
@@ -86,7 +87,15 @@ function PuzzlesPanel({ lang, voiceOut }: { lang: Lang; voiceOut: boolean }) {
   const [status, setStatus] = useState("");
   const [boardSize, setBoardSize] = useState(360);
   const [orientation, setOrientation] = useState<"white" | "black">("white");
+  const [flash, setFlash] = useState<{ from?: string; to: string; kind: "good" | "bad" } | null>(null);
+  const flashTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const doFlash = (kind: "good" | "bad", to: string, from?: string) => {
+    if (flashTimer.current) clearTimeout(flashTimer.current);
+    setFlash({ kind, to, from });
+    flashTimer.current = setTimeout(() => setFlash(null), 900);
+  };
 
   useEffect(() => {
     const calc = () => {
