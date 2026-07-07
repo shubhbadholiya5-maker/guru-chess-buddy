@@ -233,6 +233,7 @@ function PuzzlesPanel({ lang, voiceOut }: { lang: Lang; voiceOut: boolean }) {
               position={game.fen()}
               boardWidth={boardSize}
               boardOrientation={orientation}
+              customSquareStyles={squareStyles}
               onPieceDrop={(source: string, target: string) => tryMove(source, target, "q")}
             />
           )}
