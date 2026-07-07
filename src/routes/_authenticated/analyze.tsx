@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
 import ReactMarkdown from "react-markdown";
 import { AppShell } from "@/components/AppShell";
+import { DeepAnalysis } from "@/components/DeepAnalysis";
 import { analyzePgn, analyzeBatchPgns } from "@/lib/coach.functions";
 import { Radio } from "lucide-react";
 import { toast } from "sonner";
