@@ -138,3 +138,10 @@
   text-shadow: 0 0 8px oklch(0.7 0.18 190 / 0.55), 0 0 16px oklch(0.6 0.20 220 / 0.35);
   letter-spacing: 0.04em;
 }
+
+/* Anime companion — gentle float */
+@keyframes anime-float {
+  0%, 100% { transform: translateY(0) rotate(-2deg); }
+  50%      { transform: translateY(-8px) rotate(2deg); }
+}
+.animate-float { animation: anime-float 4s ease-in-out infinite; }
